@@ -7,6 +7,10 @@ import SignUp from "./components/signup";
 import LogIn from "./components/login";
 import Month from "./components/month";
 import Daily from "./components/daily";
+import FriendsCheckbox from "./components/friendscheckbox";
+import Settings from "./components/settings";
+import AccountSettings from "./components/accountsettings";
+import SearchFriends from "./components/searchfriends";
 
 const Stack = createStackNavigator();
 
@@ -41,6 +45,26 @@ export default function App() {
         <Stack.Screen
           name="Daily"
           component={Daily}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Friends Checkbox"
+          component={FriendsCheckbox}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Account Settings"
+          component={AccountSettings}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Search Friends"
+          component={SearchFriends}
           options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>

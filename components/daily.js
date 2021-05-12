@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import {
   useFonts,
   Itim_400Regular,
@@ -7,14 +14,11 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 // import CalendarPicker from "react-native-calendar-picker";
-// import { useState } from "react/cjs/react.development";
+//import { useState } from "react/cjs/react.development";
 
 export default function Daily({ route, navigation }) {
-  //const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const { date } = route.params;
-  console.log(date);
-  //Retrieved date
-
+  const currentDate = jsonConvertToDate(route.params);
+  const [month, day, year] = currentDate.toLocaleDateString().split("/");
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
@@ -25,18 +29,102 @@ export default function Daily({ route, navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 80, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 100, backgroundColor: "#B58E78" }}>
+          <View style={styles.date}>
+            <Text
+              style={{
+                fontSize: 30,
+                fontFamily: "ReemKufi_400Regular",
+                color: "#FFFAF2",
+              }}
+            >
+              {monthName(month)} {day}, {year}
+            </Text>
+          </View>
           <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
         <View>
-          <Text style={styles.text}>{date}</Text>
+          <Text style={styles.text}>{dayOfWeek(currentDate.getDay())}</Text>
         </View>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <ViewHours />
+        </ScrollView>
       </View>
     );
   }
 }
+
+//Pass in daily events?
+const ViewHours = () => {
+  const twelveHours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  return (
+    <View>
+      {twelveHours.map((hour, index) => {
+        return (
+          <View style={styles.hourBlock} key={index}>
+            <Text>{hour} AM</Text>
+          </View>
+        );
+      })}
+      {twelveHours.map((hour, index) => {
+        return (
+          <View style={styles.hourBlock} key={index}>
+            <Text>{hour} PM</Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+};
+
+const monthName = (monthNum) => {
+  const num = parseInt(monthNum) - 1;
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  return monthNames[num];
+};
+
+const dayOfWeek = (getDayNum) => {
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  return days[getDayNum];
+};
+
+const jsonConvertToDate = (jsonDate) => {
+  let { date } = jsonDate;
+  date = date.replaceAll('"', "").split("T");
+  let dateArray = date[0].split("-");
+  const year = parseInt(dateArray[0]);
+  const month = parseInt(dateArray[1] - 1);
+  const day = parseInt(dateArray[2]);
+
+  return new Date(year, month, day);
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -57,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontFamily: "ReemKufi_400Regular",
     color: "#4F2717",
-    fontSize: 18,
+    fontSize: 30,
   },
   buttonSection: {
     display: "flex",
@@ -78,14 +166,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#ffffff",
   },
-  arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
-  bottomView: {
+  arrow: { marginTop: 60, marginLeft: 20, height: 29, width: 17 },
+  date: {
     width: "100%",
     height: 80,
-    backgroundColor: "#B58E78",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
     position: "absolute",
-    bottom: 0,
+    top: 50,
+    right: 20,
+  },
+  hourBlock: {
+    height: 50,
   },
 });

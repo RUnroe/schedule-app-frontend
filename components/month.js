@@ -8,6 +8,7 @@ import {
 import backButton from "../assets/arrow.png";
 import CalendarPicker from "react-native-calendar-picker";
 // import { useState } from "react/cjs/react.development";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 export default function Month({ navigation }) {
   let [fontsLoaded] = useFonts({
@@ -25,7 +26,12 @@ export default function Month({ navigation }) {
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
-
+        <TouchableOpacity
+          style={{ paddingTop: 10 }}
+          onPress={() => navigation.navigate("Account Settings")}
+        >
+          <Text style={{ textAlign: "center" }}>Profile Section</Text>
+        </TouchableOpacity>
         {/* Calendar */}
         <CalendarPicker
           textStyle={{
@@ -33,25 +39,47 @@ export default function Month({ navigation }) {
             fontFamily: "ReemKufi_400Regular",
             fontSize: 19,
           }}
+          todayBackgroundColor="#B58E78"
+          todayTextStyle={{
+            color: "#ffffff",
+          }}
           onDateChange={(date) => {
             navigation.navigate("Daily", { date: JSON.stringify(date) });
+          }}
+          selectedDayStyle={{
+            backgroundColor: "#F8E6CB",
+          }}
+          selectedDayTextColor="#4F2717"
+          monthTitleStyle={{
+            fontSize: 28,
+          }}
+          yearTitleStyle={{
+            fontSize: 28,
           }}
         />
         <View>
           <Text style={styles.text}>Today's Events</Text>
         </View>
-        <View style={styles.buttonSection}>
-          {/* */}
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Log In")}
-          >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
         <View style={styles.bottomView}>
-          <Text>Settings/SearchFriends/FriendsCheckbox</Text>
+          <View style={styles.buttonSection}>
+            <TouchableOpacity
+              style={{ paddingTop: 10 }}
+              onPress={() => navigation.navigate("Settings")}
+            >
+              <MaterialIcons name="settings" size={40} color="#F8E6CB" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Search Friends")}
+            >
+              <Ionicons name="add-circle" size={60} color="#F8E6CB" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ paddingTop: 10 }}
+              onPress={() => navigation.navigate("Friends Checkbox")}
+            >
+              <FontAwesome5 name="user-friends" size={30} color="#F8E6CB" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -81,8 +109,10 @@ const styles = StyleSheet.create({
   },
   buttonSection: {
     display: "flex",
+    width: "90%",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
+    marginBottom: 20,
   },
   button: {
     backgroundColor: "#B58E78",
@@ -101,7 +131,7 @@ const styles = StyleSheet.create({
   arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
   bottomView: {
     width: "100%",
-    height: 80,
+    height: 100,
     backgroundColor: "#B58E78",
     justifyContent: "center",
     alignItems: "center",
