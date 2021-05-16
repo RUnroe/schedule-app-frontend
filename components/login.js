@@ -14,6 +14,7 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 import { useState } from "react";
+import Wuffle from "../assets/wuffleLogo.png";
 
 export default function LogIn({ navigation }) {
   const [email, setEmail] = useState("");
@@ -36,9 +37,10 @@ export default function LogIn({ navigation }) {
           </TouchableOpacity>
         </View>
         <Text style={styles.title}>Login</Text>
-        <Text style={{ textAlign: "center", fontSize: 30, margin: 50 }}>
-          -LOGO GOES HERE-
-        </Text>
+        <Image
+          source={Wuffle}
+          style={{ height: 200, width: 210, alignSelf: "center" }}
+        />
         <View style={styles.inputSection}>
           <Text style={styles.text}>Email</Text>
           <TextInput

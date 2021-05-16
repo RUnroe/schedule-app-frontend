@@ -14,6 +14,10 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 import { useState } from "react";
+import UploadImage from "./imagepicker";
+import { useContext } from "react";
+import { IconContext } from "./context";
+import Wuffle from "../assets/wuffleLogo.png";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -21,7 +25,7 @@ export default function SignUp({ navigation }) {
   const [last, setLast] = useState("");
   const [pass, setPass] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [icon, setIcon] = useState("");
+  const [icon, setIcon] = useContext(IconContext);
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -39,10 +43,29 @@ export default function SignUp({ navigation }) {
           </TouchableOpacity>
         </View>
         <Text style={styles.title}>Sign Up</Text>
-        <Text style={{ textAlign: "center", fontSize: 30, margin: 20 }}>
-          -IMAGE GOES HERE-
-        </Text>
         <View style={styles.inputSection}>
+          <View style={{ alignItems: "center" }}>
+            {icon ? (
+              <Image style={styles.image} source={{ uri: icon }} />
+            ) : (
+              <Image style={styles.image} source={Wuffle} />
+            )}
+            {/* <Image style={styles.image} source={{ uri: icon }} /> */}
+          </View>
+          <TouchableOpacity onPress={() => setIcon(null)}>
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 15,
+                fontWeight: "700",
+                color: "#FF5F5F",
+                paddingTop: 10,
+              }}
+            >
+              Remove
+            </Text>
+          </TouchableOpacity>
+
           <Text style={styles.text}>Email</Text>
           <TextInput
             style={styles.textInput}
@@ -74,12 +97,7 @@ export default function SignUp({ navigation }) {
             value={confirm}
           />
           <Text style={styles.text}>User Icon</Text>
-          <TouchableOpacity
-            style={styles.whiteButton}
-            onPress={() => setIcon("Use Method Callback and Upload Image")}
-          >
-            <Text style={styles.whiteButtonText}>Upload</Text>
-          </TouchableOpacity>
+          <UploadImage />
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("Waffle")}
@@ -98,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8E6CB",
   },
   title: {
-    margin: 20,
+    margin: 10,
     fontSize: 40,
     textAlign: "center",
     fontFamily: "Itim_400Regular",
@@ -153,5 +171,11 @@ const styles = StyleSheet.create({
     fontFamily: "ReemKufi_400Regular",
     fontSize: 18,
     color: "#4F2717",
+  },
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    overflow: "hidden",
   },
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -14,12 +14,15 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 import { useState } from "react";
+import Wuffle from "../assets/wuffleLogo.png";
+import UploadImage from "./imagepicker";
+import { IconContext } from "./context";
 
 export default function AccountSettings({ navigation }) {
   const [email, setEmail] = useState("");
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
-  const [icon, setIcon] = useState("");
+  const [icon, setIcon] = useContext(IconContext);
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -32,17 +35,27 @@ export default function AccountSettings({ navigation }) {
     return (
       <View style={styles.container}>
         <View style={{ height: 80, backgroundColor: "#B58E78" }}>
-          <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
         <Text style={styles.title}>Account Settings</Text>
-        <Text style={{ textAlign: "center", fontSize: 30, margin: 20 }}>
-          -IMAGE GOES HERE-
+        <View style={{ alignItems: "center" }}>
+          {icon ? (
+            <Image style={styles.image} source={{ uri: icon }} />
+          ) : (
+            <Image style={styles.image} source={Wuffle} />
+          )}
+          {/* <Image style={styles.image} source={{ uri: icon }} /> */}
+        </View>
+        <Text style={{ textAlign: "center", fontSize: 10, margin: 20 }}>
+          -Remove Btn-
         </Text>
-        <Text style={{ textAlign: "center", fontSize: 30, margin: 20 }}>
-          -Logout Button-
-        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
+          <View style={styles.whiteButton}>
+            <Text styl={styles.whiteButtonText}>Logout</Text>
+          </View>
+        </TouchableOpacity>
         <View style={styles.inputSection}>
           <Text style={styles.text}>Email</Text>
           <TextInput
@@ -63,12 +76,7 @@ export default function AccountSettings({ navigation }) {
             value={last}
           />
           <Text style={styles.text}>User Icon</Text>
-          <TouchableOpacity
-            style={styles.whiteButton}
-            onPress={() => setIcon("Use Method Callback and Upload Image")}
-          >
-            <Text style={styles.whiteButtonText}>Upload</Text>
-          </TouchableOpacity>
+          <UploadImage />
           <Text>Todo: Addddd Cancel Button</Text>
           <TouchableOpacity
             style={styles.button}
@@ -137,11 +145,17 @@ const styles = StyleSheet.create({
     borderColor: "#4F2717",
     borderWidth: 2,
     borderRadius: 20,
-    alignSelf: "flex-start",
+    alignSelf: "center",
   },
   whiteButtonText: {
     fontFamily: "ReemKufi_400Regular",
     fontSize: 18,
     color: "#4F2717",
+  },
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    overflow: "hidden",
   },
 });

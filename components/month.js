@@ -9,8 +9,12 @@ import backButton from "../assets/arrow.png";
 import CalendarPicker from "react-native-calendar-picker";
 // import { useState } from "react/cjs/react.development";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useContext } from "react";
+import { IconContext } from "./context";
+import Wuffle from "../assets/wuffleLogo.png";
 
 export default function Month({ navigation }) {
+  const [icon, setIcon] = useContext(IconContext);
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
@@ -22,16 +26,29 @@ export default function Month({ navigation }) {
     return (
       <View style={styles.container}>
         <View style={{ height: 80, backgroundColor: "#B58E78" }}>
-          <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
-            <Image source={backButton} style={styles.arrow} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Account Settings")}
+          >
+            <View style={styles.profile}>
+              <View style={styles.profileSection}>
+                {icon ? (
+                  <Image style={styles.image} source={{ uri: icon }} />
+                ) : (
+                  <Image style={styles.image} source={Wuffle} />
+                )}
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "ReemKufi_400Regular",
+                    color: "#FFFAF2",
+                  }}
+                >
+                  Username
+                </Text>
+              </View>
+            </View>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={{ paddingTop: 10 }}
-          onPress={() => navigation.navigate("Account Settings")}
-        >
-          <Text style={{ textAlign: "center" }}>Profile Section</Text>
-        </TouchableOpacity>
         {/* Calendar */}
         <CalendarPicker
           textStyle={{
@@ -137,5 +154,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     bottom: 0,
+  },
+  profile: { width: "100%", alignItems: "center" },
+  image: {
+    height: 20,
+    width: 20,
+    margin: 5,
+  },
+  profileSection: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 35,
+    padding: 5,
+    paddingRight: 10,
+    borderRadius: 100,
+    backgroundColor: "black",
   },
 });

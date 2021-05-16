@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import {
   useFonts,
   Itim_400Regular,
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
+import Wuffle from "../assets/wuffleLogo.png";
 
 export default function Home({ navigation }) {
   let [fontsLoaded] = useFonts({
@@ -19,9 +20,10 @@ export default function Home({ navigation }) {
       <View style={styles.container}>
         <View style={{ height: 60, backgroundColor: "#B58E78" }}></View>
         <Text style={styles.title}>Welcome To Waffle!</Text>
-        <Text style={{ textAlign: "center", fontSize: 30, margin: 50 }}>
-          -LOGO GOES HERE-
-        </Text>
+        <Image
+          source={Wuffle}
+          style={{ height: 200, width: 210, alignSelf: "center" }}
+        />
         <Text style={styles.text}>
           A simple scheduling app for you and your friends!
         </Text>
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8E6CB",
   },
   title: {
-    margin: 50,
+    margin: 40,
     fontSize: 36,
     textAlign: "center",
     fontFamily: "Itim_400Regular",
@@ -61,7 +63,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginLeft: 30,
     marginRight: 30,
-    marginBottom: 30,
+    marginBottom: 0,
+    marginTop: 40,
     fontFamily: "ReemKufi_400Regular",
     color: "#4F2717",
     fontSize: 18,
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
+    marginTop: 50,
   },
   button: {
     backgroundColor: "#B58E78",
