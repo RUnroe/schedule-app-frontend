@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -31,38 +32,43 @@ export default function LogIn({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 80, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Login</Text>
-        <Image
-          source={Wuffle}
-          style={{ height: 200, width: 210, alignSelf: "center" }}
-        />
-        <View style={styles.inputSection}>
-          <Text style={styles.text}>Email</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setEmail}
-            value={email}
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Login</Text>
+          <Image
+            source={Wuffle}
+            style={{ height: 200, width: 210, alignSelf: "center" }}
           />
-          <Text style={styles.text}>Password</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setPass}
-            value={pass}
-          />
+          <View style={styles.inputSection}>
+            <Text style={styles.text}>Email</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setEmail}
+              value={email}
+            />
+            <Text style={styles.text}>Password</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setPass}
+              value={pass}
+            />
 
-          {/* Change to go to month page */}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Month")}
-          >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
+            {/* Change to go to month page */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Month")}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -103,6 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#B58E78",
     padding: 1,
     marginTop: 20,
+    marginBottom: 40,
     paddingRight: 10,
     paddingLeft: 10,
     borderColor: "#4F2717",

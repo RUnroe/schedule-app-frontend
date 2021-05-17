@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -27,20 +28,25 @@ export default function SearchFriends({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 80, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Search Friends</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={setSearch}
-          value={search}
-        />
-        <Text style={styles.title}>Current Friends</Text>
-        <Text style={styles.text}>---Todo: Pending Friendss ---</Text>
-        <Text style={styles.text}>---Todo: Display All Friends ---</Text>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Search Friends</Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={setSearch}
+            value={search}
+          />
+          <Text style={styles.title}>Current Friends</Text>
+          <Text style={styles.text}>---Todo: Pending Friendss ---</Text>
+          <Text style={styles.text}>---Todo: Display All Friends ---</Text>
+        </ScrollView>
       </View>
     );
   }

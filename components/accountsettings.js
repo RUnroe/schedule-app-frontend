@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -34,57 +35,62 @@ export default function AccountSettings({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 80, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Account Settings</Text>
-        <View style={{ alignItems: "center" }}>
-          {icon ? (
-            <Image style={styles.image} source={{ uri: icon }} />
-          ) : (
-            <Image style={styles.image} source={Wuffle} />
-          )}
-          {/* <Image style={styles.image} source={{ uri: icon }} /> */}
-        </View>
-        <Text style={{ textAlign: "center", fontSize: 10, margin: 20 }}>
-          -Remove Btn-
-        </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
-          <View style={styles.whiteButton}>
-            <Text styl={styles.whiteButtonText}>Logout</Text>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Account Settings</Text>
+          <View style={{ alignItems: "center" }}>
+            {icon ? (
+              <Image style={styles.image} source={{ uri: icon }} />
+            ) : (
+              <Image style={styles.image} source={Wuffle} />
+            )}
+            {/* <Image style={styles.image} source={{ uri: icon }} /> */}
           </View>
-        </TouchableOpacity>
-        <View style={styles.inputSection}>
-          <Text style={styles.text}>Email</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setEmail}
-            value={email}
-          />
-          <Text style={styles.text}>First Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setFirst}
-            value={first}
-          />
-          <Text style={styles.text}>Last Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setLast}
-            value={last}
-          />
-          <Text style={styles.text}>User Icon</Text>
-          <UploadImage />
-          <Text>Todo: Addddd Cancel Button</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Month")}
-          >
-            <Text style={styles.buttonText}>Save Changes</Text>
+          <Text style={{ textAlign: "center", fontSize: 10, margin: 20 }}>
+            -Remove Btn-
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
+            <View style={styles.whiteButton}>
+              <Text styl={styles.whiteButtonText}>Logout</Text>
+            </View>
           </TouchableOpacity>
-        </View>
+          <View style={styles.inputSection}>
+            <Text style={styles.text}>Email</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setEmail}
+              value={email}
+            />
+            <Text style={styles.text}>First Name</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setFirst}
+              value={first}
+            />
+            <Text style={styles.text}>Last Name</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setLast}
+              value={last}
+            />
+            <Text style={styles.text}>User Icon</Text>
+            <UploadImage />
+            <Text>Todo: Addddd Cancel Button</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Month")}
+            >
+              <Text style={styles.buttonText}>Save Changes</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }

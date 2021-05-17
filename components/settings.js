@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -30,21 +31,26 @@ export default function Settings({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 80, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Settings</Text>
-        <Text style={styles.text}>---Todo: Generate Calendars ---</Text>
-        <Text style={styles.text}>---Todo: Add To Calendars ---</Text>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Month")}
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.buttonText}>Save Changes</Text>
-        </TouchableOpacity>
+          <Text style={styles.title}>Settings</Text>
+          <Text style={styles.text}>---Todo: Generate Calendars ---</Text>
+          <Text style={styles.text}>---Todo: Add To Calendars ---</Text>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Month")}
+          >
+            <Text style={styles.buttonText}>Save Changes</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     );
   }

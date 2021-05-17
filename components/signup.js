@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -26,85 +27,117 @@ export default function SignUp({ navigation }) {
   const [pass, setPass] = useState("");
   const [confirm, setConfirm] = useState("");
   const [icon, setIcon] = useContext(IconContext);
+  const [validator, setValidator] = useState({
+    mail: false,
+    fName: false,
+    lName: false,
+    password: false,
+    confirmPass: false,
+  });
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
 
+  const validation = (value) => {
+    let first = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i;
+    setFirst(value);
+    if (first.test(value)) {
+      console.log("Your golden");
+      setValidator((prev) => ({ ...prev, fName: true }));
+    } else {
+      console.log("No..");
+      setValidator((prev) => ({ ...prev, fName: false }));
+    }
+  };
+
+  //onSubmit FETCH POST values
+
+  const { fName } = validator;
+
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 80, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Sign Up</Text>
-        <View style={styles.inputSection}>
-          <View style={{ alignItems: "center" }}>
-            {icon ? (
-              <Image style={styles.image} source={{ uri: icon }} />
-            ) : (
-              <Image style={styles.image} source={Wuffle} />
-            )}
-            {/* <Image style={styles.image} source={{ uri: icon }} /> */}
-          </View>
-          <TouchableOpacity onPress={() => setIcon(null)}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 15,
-                fontWeight: "700",
-                color: "#FF5F5F",
-                paddingTop: 10,
-              }}
-            >
-              Remove
-            </Text>
-          </TouchableOpacity>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Sign Up</Text>
+          <View style={styles.inputSection}>
+            <View style={{ alignItems: "center" }}>
+              {icon ? (
+                <Image style={styles.image} source={{ uri: icon }} />
+              ) : (
+                <Image style={styles.image} source={Wuffle} />
+              )}
+            </View>
+            <TouchableOpacity onPress={() => setIcon(null)}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 12,
+                  fontWeight: "700",
+                  color: "#FF5F5F",
+                  paddingTop: 10,
+                }}
+              >
+                Remove
+              </Text>
+            </TouchableOpacity>
 
-          <Text style={styles.text}>Email</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setEmail}
-            value={email}
-          />
-          <Text style={styles.text}>First Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setFirst}
-            value={first}
-          />
-          <Text style={styles.text}>Last Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setLast}
-            value={last}
-          />
-          <Text style={styles.text}>Password</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setPass}
-            value={pass}
-          />
-          <Text style={styles.text}>Confirm Password</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setConfirm}
-            value={confirm}
-          />
-          <Text style={styles.text}>User Icon</Text>
-          <UploadImage />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Waffle")}
-          >
-            <Text style={styles.buttonText}>Create Account</Text>
-          </TouchableOpacity>
-        </View>
+            <Text style={styles.text}>Email</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setEmail}
+              value={email}
+            />
+            <Text style={styles.text}>First Name</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={validation}
+              value={first}
+            />
+            {fName ? (
+              fName
+            ) : (
+              <Text style={styles.error}>Invalid First Name</Text>
+            )}
+            <Text style={styles.text}>Last Name</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setLast}
+              value={last}
+            />
+            <Text style={styles.text}>Password</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setPass}
+              value={pass}
+            />
+            <Text style={styles.text}>Confirm Password</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setConfirm}
+              value={confirm}
+            />
+            <Text style={styles.text}>User Icon</Text>
+            <UploadImage />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Waffle")}
+            >
+              <Text style={styles.buttonText}>Create Account</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -145,6 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#B58E78",
     padding: 1,
     marginTop: 20,
+    marginBottom: 40,
     paddingRight: 10,
     paddingLeft: 10,
     borderColor: "#4F2717",
@@ -177,5 +211,11 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     overflow: "hidden",
+  },
+  error: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#FF5F5F",
+    paddingLeft: 10,
   },
 });

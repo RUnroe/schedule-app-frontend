@@ -1,13 +1,19 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  TextInput,
+  ScrollView,
+} from "react-native";
 import {
   useFonts,
   Itim_400Regular,
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
-import backButton from "../assets/arrow.png";
 import CalendarPicker from "react-native-calendar-picker";
-// import { useState } from "react/cjs/react.development";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { IconContext } from "./context";
@@ -25,7 +31,7 @@ export default function Month({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 80, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
           <TouchableOpacity
             onPress={() => navigation.navigate("Account Settings")}
           >
@@ -40,7 +46,7 @@ export default function Month({ navigation }) {
                   style={{
                     fontSize: 20,
                     fontFamily: "ReemKufi_400Regular",
-                    color: "#FFFAF2",
+                    color: "#4F2717",
                   }}
                 >
                   Username
@@ -75,8 +81,16 @@ export default function Month({ navigation }) {
           }}
         />
         <View>
+          <TextInput style={styles.borderLine} value="" editable={false} />
           <Text style={styles.text}>Today's Events</Text>
         </View>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Fetch Data and Display Friends Events on Current Date */}
+          <Text>ADD STUFF HERE</Text>
+        </ScrollView>
         <View style={styles.bottomView}>
           <View style={styles.buttonSection}>
             <TouchableOpacity
@@ -116,13 +130,23 @@ const styles = StyleSheet.create({
     color: "#4F2717",
   },
   text: {
+    borderTopWidth: 1,
+    borderTopColor: "#e5d3b3",
     textAlign: "center",
-    marginLeft: 30,
-    marginRight: 30,
-    marginBottom: 30,
+    marginLeft: 13,
+    marginRight: 13,
+    marginBottom: 10,
     fontFamily: "ReemKufi_400Regular",
     color: "#4F2717",
     fontSize: 18,
+  },
+  borderLine: {
+    borderTopWidth: 1,
+    borderTopColor: "rgba(71, 56, 47, 0.3)",
+    marginLeft: 13,
+    marginRight: 13,
+    marginTop: 5,
+    marginBottom: 0,
   },
   buttonSection: {
     display: "flex",
@@ -164,10 +188,10 @@ const styles = StyleSheet.create({
   profileSection: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 35,
+    marginTop: 40,
     padding: 5,
     paddingRight: 10,
     borderRadius: 100,
-    backgroundColor: "black",
+    backgroundColor: "#F8E6CB",
   },
 });

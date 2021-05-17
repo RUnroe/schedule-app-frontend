@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import {
   useFonts,
   Itim_400Regular,
@@ -18,30 +25,35 @@ export default function Home({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 60, backgroundColor: "#B58E78" }}></View>
-        <Text style={styles.title}>Welcome To Waffle!</Text>
-        <Image
-          source={Wuffle}
-          style={{ height: 200, width: 210, alignSelf: "center" }}
-        />
-        <Text style={styles.text}>
-          A simple scheduling app for you and your friends!
-        </Text>
-        <Text style={styles.text}>Get started today!</Text>
-        <View style={styles.buttonSection}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Sign Up")}
-          >
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Log In")}
-          >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}></View>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Welcome To Waffle!</Text>
+          <Image
+            source={Wuffle}
+            style={{ height: 200, width: 210, alignSelf: "center" }}
+          />
+          <Text style={styles.text}>
+            A simple scheduling app for you and your friends!
+          </Text>
+          <Text style={styles.text}>Get started today!</Text>
+          <View style={styles.buttonSection}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Sign Up")}
+            >
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Log In")}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -83,6 +95,7 @@ const styles = StyleSheet.create({
     borderColor: "#4F2717",
     borderWidth: 2,
     borderRadius: 20,
+    marginBottom: 40,
   },
   buttonText: {
     fontFamily: "ReemKufi_400Regular",

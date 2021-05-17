@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  TextInput,
 } from "react-native";
 import {
   useFonts,
@@ -29,7 +30,7 @@ export default function Daily({ route, navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 100, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
           <View style={styles.date}>
             <Text
               style={{
@@ -49,6 +50,7 @@ export default function Daily({ route, navigation }) {
           <Text style={styles.text}>{dayOfWeek(currentDate.getDay())}</Text>
         </View>
         <ScrollView
+          style={styles.scrollView}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
@@ -68,6 +70,8 @@ const ViewHours = () => {
         return (
           <View style={styles.hourBlock} key={index}>
             <Text>{hour} AM</Text>
+            <TextInput style={styles.borderLine} editable={false} />
+            {/* Event Input Here */}
           </View>
         );
       })}
@@ -75,6 +79,8 @@ const ViewHours = () => {
         return (
           <View style={styles.hourBlock} key={index}>
             <Text>{hour} PM</Text>
+            <TextInput style={styles.borderLine} editable={false} />
+            {/* Event Input Here */}
           </View>
         );
       })}
@@ -140,12 +146,11 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    marginLeft: 30,
-    marginRight: 30,
-    marginBottom: 30,
+    marginBottom: 10,
+    marginTop: 10,
     fontFamily: "ReemKufi_400Regular",
     color: "#4F2717",
-    fontSize: 30,
+    fontSize: 25,
   },
   buttonSection: {
     display: "flex",
@@ -177,6 +182,15 @@ const styles = StyleSheet.create({
     right: 20,
   },
   hourBlock: {
-    height: 50,
+    display: "flex",
+    flexDirection: "row",
+    padding: 15,
+  },
+  borderLine: {
+    marginTop: 8,
+    marginLeft: 10,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(71, 56, 47, 0.3)",
+    width: "100%",
   },
 });

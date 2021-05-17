@@ -12,13 +12,16 @@ import Settings from "./components/settings";
 import AccountSettings from "./components/accountsettings";
 import SearchFriends from "./components/searchfriends";
 import { IconContext } from "./components/context";
+import { useEffect } from "react/cjs/react.production.min";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [icon, setIcon] = useState(null);
 
-  console.log(icon);
+  // useEffect(() => {
+  //   fetch()
+  // }, [])
 
   return (
     <IconContext.Provider value={[icon, setIcon]}>
