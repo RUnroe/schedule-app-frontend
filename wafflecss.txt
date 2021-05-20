@@ -1,3 +1,9 @@
+--color-user-1: #B3E0FE;
+    --color-user-2: #ffc552;
+    --color-user-3: #ecbfff;
+    --color-user-4: #a4f5a8;
+    --color-user-5: #c2c4ff;
+
 :root {
     --color-brown-dark: #4F2717;
     --color-brown-medium: #B58E78;

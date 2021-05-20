@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
   TextInput,
   ScrollView,
 } from "react-native";
@@ -15,16 +14,25 @@ import {
 } from "@expo-google-fonts/dev";
 import CalendarPicker from "react-native-calendar-picker";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useContext } from "react";
-import { IconContext } from "./context";
-import Wuffle from "../assets/wuffleLogo.png";
+import { CalendarContext, FriendsContext } from "./context";
 
 export default function Month({ navigation }) {
-  const [icon, setIcon] = useContext(IconContext);
+  const [friends, setFriends] = useContext(FriendsContext);
+  const [calendar, setCalendar] = useContext(CalendarContext);
+
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
+
+  const checkEvents = (isoDate) => {
+    friends.current.forEach((friend) => {
+      calendar[friend.id].forEach((e) => {
+        let event = e.start.toString().split("T");
+        if (isoDate === event[0]) console.log("Event: ", event[0]);
+      });
+    });
+  };
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
@@ -37,11 +45,6 @@ export default function Month({ navigation }) {
           >
             <View style={styles.profile}>
               <View style={styles.profileSection}>
-                {icon ? (
-                  <Image style={styles.image} source={{ uri: icon }} />
-                ) : (
-                  <Image style={styles.image} source={Wuffle} />
-                )}
                 <Text
                   style={{
                     fontSize: 20,
@@ -57,6 +60,17 @@ export default function Month({ navigation }) {
         </View>
         {/* Calendar */}
         <CalendarPicker
+          customDatesStyles={(date) => {
+            let newDate = new Date(date.toString()).toISOString().split("T");
+            checkEvents(newDate[0]);
+
+            // friends.forEach((friend) => {
+            //   calendar[friend.id].forEach((e) => {
+            //     if (e.start.toString()) {
+            //     }
+            //   });
+            // });
+          }}
           textStyle={{
             color: "#4F2717",
             fontFamily: "ReemKufi_400Regular",
@@ -181,15 +195,17 @@ const styles = StyleSheet.create({
   },
   profile: { width: "100%", alignItems: "center" },
   image: {
-    height: 20,
-    width: 20,
-    margin: 5,
+    height: 25,
+    width: 25,
+    margin: 2,
+    borderRadius: 20,
   },
   profileSection: {
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 40,
     padding: 5,
+    paddingLeft: 10,
     paddingRight: 10,
     borderRadius: 100,
     backgroundColor: "#F8E6CB",

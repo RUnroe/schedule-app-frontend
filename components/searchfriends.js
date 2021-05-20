@@ -38,11 +38,14 @@ export default function SearchFriends({ navigation }) {
           showsVerticalScrollIndicator={false}
         >
           <Text style={styles.title}>Search Friends</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setSearch}
-            value={search}
-          />
+          <View style={styles.inputSection}>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setSearch}
+              value={search}
+            />
+          </View>
+
           <Text style={styles.title}>Current Friends</Text>
           <Text style={styles.text}>---Todo: Pending Friendss ---</Text>
           <Text style={styles.text}>---Todo: Display All Friends ---</Text>

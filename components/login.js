@@ -20,6 +20,8 @@ import Wuffle from "../assets/wuffleLogo.png";
 export default function LogIn({ navigation }) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+
+  //fetch()
   //validate email and pass
 
   let [fontsLoaded] = useFonts({

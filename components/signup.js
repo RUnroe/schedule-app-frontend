@@ -15,10 +15,6 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 import { useState } from "react";
-import UploadImage from "./imagepicker";
-import { useContext } from "react";
-import { IconContext } from "./context";
-import Wuffle from "../assets/wuffleLogo.png";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -26,35 +22,56 @@ export default function SignUp({ navigation }) {
   const [last, setLast] = useState("");
   const [pass, setPass] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [icon, setIcon] = useContext(IconContext);
-  const [validator, setValidator] = useState({
-    mail: false,
-    fName: false,
-    lName: false,
-    password: false,
-    confirmPass: false,
-  });
+  const [errorMsg, setErrorMsg] = useState(false);
+  const [validEmail, setValidEmail] = useState(true);
+  const [validFirst, setValidFirst] = useState(true);
+  const [validLast, setValidLast] = useState(true);
+  const [validPass, setValidPass] = useState(true);
+  const [validConfirm, setValidConfirm] = useState(true);
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
 
-  const validation = (value) => {
-    let first = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i;
-    setFirst(value);
-    if (first.test(value)) {
-      console.log("Your golden");
-      setValidator((prev) => ({ ...prev, fName: true }));
-    } else {
-      console.log("No..");
-      setValidator((prev) => ({ ...prev, fName: false }));
+  const emailRegex = /\S+@\S+\.\S+/;
+  const nameRegex = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+  const validation = (value, num) => {
+    if (num === 0) {
+      setEmail(value);
+      emailRegex.test(value) ? setValidEmail(true) : setValidEmail(false);
+    }
+    if (num === 1) {
+      setFirst(value);
+      nameRegex.test(value) ? setValidFirst(true) : setValidFirst(false);
+    }
+    if (num === 2) {
+      setLast(value);
+      nameRegex.test(value) ? setValidLast(true) : setValidLast(false);
+    }
+    if (num === 3) {
+      setPass(value);
+      passwordRegex.test(value) ? setValidPass(true) : setValidPass(false);
+    }
+    if (num === 4) {
+      setConfirm(value);
+      value === pass ? setValidConfirm(true) : setValidConfirm(false);
     }
   };
 
-  //onSubmit FETCH POST values
-
-  const { fName } = validator;
+  const validateAll = () => {
+    if (email && first && last && pass && confirm) {
+      setErrorMsg(false);
+      if (validEmail && validFirst && validLast && validPass && validConfirm) {
+        return true;
+      }
+      return false;
+    }
+    setErrorMsg(true);
+    return false;
+  };
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
@@ -72,67 +89,75 @@ export default function SignUp({ navigation }) {
         >
           <Text style={styles.title}>Sign Up</Text>
           <View style={styles.inputSection}>
-            <View style={{ alignItems: "center" }}>
-              {icon ? (
-                <Image style={styles.image} source={{ uri: icon }} />
-              ) : (
-                <Image style={styles.image} source={Wuffle} />
-              )}
-            </View>
-            <TouchableOpacity onPress={() => setIcon(null)}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 12,
-                  fontWeight: "700",
-                  color: "#FF5F5F",
-                  paddingTop: 10,
-                }}
-              >
-                Remove
-              </Text>
-            </TouchableOpacity>
-
             <Text style={styles.text}>Email</Text>
             <TextInput
               style={styles.textInput}
-              onChangeText={setEmail}
+              onChangeText={(e) => validation(e, 0)}
               value={email}
             />
+            {validEmail ? (
+              validEmail
+            ) : (
+              <Text style={styles.error}>Invalid Email Name</Text>
+            )}
             <Text style={styles.text}>First Name</Text>
             <TextInput
               style={styles.textInput}
-              onChangeText={validation}
+              onChangeText={(e) => validation(e, 1)}
               value={first}
             />
-            {fName ? (
-              fName
+            {validFirst ? (
+              validFirst
             ) : (
               <Text style={styles.error}>Invalid First Name</Text>
             )}
             <Text style={styles.text}>Last Name</Text>
             <TextInput
               style={styles.textInput}
-              onChangeText={setLast}
+              onChangeText={(e) => validation(e, 2)}
               value={last}
             />
+            {validLast ? (
+              validLast
+            ) : (
+              <Text style={styles.error}>Invalid Last Name</Text>
+            )}
             <Text style={styles.text}>Password</Text>
             <TextInput
               style={styles.textInput}
-              onChangeText={setPass}
+              onChangeText={(e) => validation(e, 3)}
               value={pass}
             />
+            {validPass ? (
+              validPass
+            ) : (
+              <Text style={styles.error}>Invalid Password</Text>
+            )}
             <Text style={styles.text}>Confirm Password</Text>
             <TextInput
               style={styles.textInput}
-              onChangeText={setConfirm}
+              onChangeText={(e) => validation(e, 4)}
               value={confirm}
             />
-            <Text style={styles.text}>User Icon</Text>
-            <UploadImage />
+            {validConfirm ? (
+              validConfirm
+            ) : (
+              <Text style={styles.error}>Does not match password</Text>
+            )}
+            {errorMsg ? (
+              <Text style={styles.emptyError}>Fill out All Input Fields</Text>
+            ) : (
+              errorMsg
+            )}
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate("Waffle")}
+              onPress={() => {
+                if (validateAll()) {
+                  //Create User
+                  // FETCH POST values
+                  navigation.navigate("Waffle");
+                }
+              }}
             >
               <Text style={styles.buttonText}>Create Account</Text>
             </TouchableOpacity>
@@ -217,5 +242,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#FF5F5F",
     paddingLeft: 10,
+  },
+  emptyError: {
+    paddingTop: 10,
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#FF5F5F",
+    textAlign: "center",
   },
 });

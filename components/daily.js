@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -14,16 +14,23 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
-// import CalendarPicker from "react-native-calendar-picker";
-//import { useState } from "react/cjs/react.development";
+import { CalendarContext, FriendsContext } from "./context";
 
 export default function Daily({ route, navigation }) {
+  const [friends, setFriends] = useContext(FriendsContext);
+  const [calendar, setCalendar] = useContext(CalendarContext);
+
   const currentDate = jsonConvertToDate(route.params);
   const [month, day, year] = currentDate.toLocaleDateString().split("/");
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
+
+  if (calendar && friends?.current) {
+    let id = friends.current[0].id;
+    console.log(calendar[id][0].end);
+  }
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
@@ -61,7 +68,7 @@ export default function Daily({ route, navigation }) {
   }
 }
 
-//Pass in daily events?
+//Pass in daily events
 const ViewHours = () => {
   const twelveHours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   return (
@@ -123,13 +130,10 @@ const dayOfWeek = (getDayNum) => {
 
 const jsonConvertToDate = (jsonDate) => {
   let { date } = jsonDate;
-  date = date.replaceAll('"', "").split("T");
-  let dateArray = date[0].split("-");
-  const year = parseInt(dateArray[0]);
-  const month = parseInt(dateArray[1] - 1);
-  const day = parseInt(dateArray[2]);
-
-  return new Date(year, month, day);
+  console.log(date);
+  date = date.replace('"', "");
+  date = date.replace('"', "");
+  return new Date(date);
 };
 
 const styles = StyleSheet.create({
@@ -171,14 +175,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#ffffff",
   },
-  arrow: { marginTop: 60, marginLeft: 20, height: 29, width: 17 },
+  arrow: { marginTop: 50, marginLeft: 20, height: 29, width: 17 },
   date: {
     width: "100%",
     height: 80,
     justifyContent: "flex-start",
     alignItems: "flex-end",
     position: "absolute",
-    top: 50,
+    top: 40,
     right: 20,
   },
   hourBlock: {

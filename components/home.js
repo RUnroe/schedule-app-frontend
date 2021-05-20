@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,8 @@ export default function Home({ navigation }) {
     Itim_400Regular,
     ReemKufi_400Regular,
   });
+
+  //Convert to date and then display on daily
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;

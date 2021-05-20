@@ -14,12 +14,18 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
+import Wuffle from "../assets/wuffleLogo.png";
 
 export default function FriendsCheckbox({ navigation }) {
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
+
+  // if (calendar && friends?.current) {
+  // let id = friends.current[0].id;
+  //console.log(calendar[id][0].end);
+  // }
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
@@ -36,13 +42,15 @@ export default function FriendsCheckbox({ navigation }) {
           showsVerticalScrollIndicator={false}
         >
           <Text style={styles.title}>Friends Calendars</Text>
+
+          <Image
+            source={Wuffle}
+            style={{ height: 200, width: 210, alignSelf: "center" }}
+          />
+
           <Text style={styles.text}>Note: Can only check up to four boxes</Text>
           <Text style={styles.text}>
             ---Todo: Generate Friends w/Checkboxes ---
-          </Text>
-
-          <Text style={{ textAlign: "center", fontSize: 30, margin: 50 }}>
-            -LOGO GOES HERE-
           </Text>
 
           <TouchableOpacity

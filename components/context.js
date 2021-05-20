@@ -1,3 +1,5 @@
 import { createContext } from "react";
 
-export const IconContext = createContext();
+export const FriendsContext = createContext();
+
+export const CalendarContext = createContext();
