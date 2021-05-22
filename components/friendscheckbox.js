@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -15,19 +15,36 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 import Wuffle from "../assets/wuffleLogo.png";
+import { Check, FilterFriendsContext, FriendsContext } from "./context";
+import Checkbox from "expo-checkbox";
 
 export default function FriendsCheckbox({ navigation }) {
+  const [friends, setFriends] = useContext(FriendsContext);
+  const [filterFriends, setFilterFriends] = useContext(FilterFriendsContext);
+  const [checked, setChecked] = useContext(Check);
+  const [disable, setDisable] = useState(false);
+
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
 
-  // if (calendar && friends?.current) {
-  // let id = friends.current[0].id;
-  //console.log(calendar[id][0].end);
-  // }
+  const filter = (checked) => {
+    let filterArray = [];
+    let count = 0;
+    checked.forEach((check, index) => {
+      if (check === true) {
+        count++;
+        filterArray.push(friends.current[index]);
+      }
+    });
+    if (count > 3) {
+      setDisable(true);
+    }
+    setFilterFriends(filterArray);
+  };
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded && friends?.current) {
     return <Text>Loading...</Text>;
   } else {
     return (
@@ -47,11 +64,50 @@ export default function FriendsCheckbox({ navigation }) {
             source={Wuffle}
             style={{ height: 200, width: 210, alignSelf: "center" }}
           />
-
-          <Text style={styles.text}>Note: Can only check up to four boxes</Text>
-          <Text style={styles.text}>
-            ---Todo: Generate Friends w/Checkboxes ---
-          </Text>
+          <Text>Note: You can only select up to four friends</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              setChecked(() => {
+                let list = [];
+                friends.current.forEach(() => {
+                  list.push(false);
+                });
+                return list;
+              });
+              setDisable(false);
+              setFilterFriends([]);
+            }}
+          >
+            <Text style={styles.buttonText}>Reset</Text>
+          </TouchableOpacity>
+          <View>
+            {friends?.current ? (
+              friends.current.map((friend, index) => {
+                //console.log(friend);
+                return (
+                  <View key={`Friend_${index}`}>
+                    <Checkbox
+                      value={checked[index]}
+                      onValueChange={(e) => {
+                        setChecked((prev) => {
+                          let newList = [...prev];
+                          newList[index] = e;
+                          filter(newList);
+                          return newList;
+                        });
+                      }}
+                      color={checked ? "#666666" : undefined}
+                      disabled={disable}
+                    />
+                    <Text>{friend.name}</Text>
+                  </View>
+                );
+              })
+            ) : (
+              <Text>No Friends</Text>
+            )}
+          </View>
 
           <TouchableOpacity
             style={styles.button}

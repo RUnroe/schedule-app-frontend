@@ -11,19 +11,33 @@ import FriendsCheckbox from "./components/friendscheckbox";
 import Settings from "./components/settings";
 import AccountSettings from "./components/accountsettings";
 import SearchFriends from "./components/searchfriends";
-import { CalendarContext, FriendsContext } from "./components/context";
+import {
+  CalendarContext,
+  Check,
+  FilterFriendsContext,
+  FriendsContext,
+} from "./components/context";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [friends, setFriends] = useState([]);
   const [calendar, setCalendar] = useState([]);
+  const [filterFriends, setFilterFriends] = useState([]);
+  const [checked, setChecked] = useState([]);
 
   useEffect(() => {
     fetch("https://waffle.jtreed.org/api/v0/friends")
       .then((res) => res.json())
       .then((data) => {
         setFriends(data);
+        setChecked(() => {
+          let list = [];
+          data.current.forEach(() => {
+            list.push(false);
+          });
+          return list;
+        });
       });
   }, []);
 
@@ -38,59 +52,65 @@ export default function App() {
   return (
     <FriendsContext.Provider value={[friends, setFriends]}>
       <CalendarContext.Provider value={[calendar, setCalendar]}>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
+        <Check.Provider value={[checked, setChecked]}>
+          <FilterFriendsContext.Provider
+            value={[filterFriends, setFilterFriends]}
           >
-            <Stack.Screen
-              name="Waffle"
-              component={Home}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Sign Up"
-              component={SignUp}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Log In"
-              component={LogIn}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Month"
-              component={Month}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Daily"
-              component={Daily}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Friends Checkbox"
-              component={FriendsCheckbox}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Settings"
-              component={Settings}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Account Settings"
-              component={AccountSettings}
-              options={{ gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="Search Friends"
-              component={SearchFriends}
-              options={{ gestureEnabled: false }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+            <NavigationContainer>
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen
+                  name="Waffle"
+                  component={Home}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Sign Up"
+                  component={SignUp}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Log In"
+                  component={LogIn}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Month"
+                  component={Month}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Daily"
+                  component={Daily}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Friends Checkbox"
+                  component={FriendsCheckbox}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Settings"
+                  component={Settings}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Account Settings"
+                  component={AccountSettings}
+                  options={{ gestureEnabled: false }}
+                />
+                <Stack.Screen
+                  name="Search Friends"
+                  component={SearchFriends}
+                  options={{ gestureEnabled: false }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </FilterFriendsContext.Provider>
+        </Check.Provider>
       </CalendarContext.Provider>
     </FriendsContext.Provider>
   );

@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  TextInput,
   ScrollView,
 } from "react-native";
 import {
@@ -14,10 +13,15 @@ import {
 } from "@expo-google-fonts/dev";
 import CalendarPicker from "react-native-calendar-picker";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { CalendarContext, FriendsContext } from "./context";
+import {
+  CalendarContext,
+  FilterFriendsContext,
+  FriendsContext,
+} from "./context";
 
 export default function Month({ navigation }) {
   const [friends, setFriends] = useContext(FriendsContext);
+  const [filterFriends, setFilterFriends] = useContext(FilterFriendsContext);
   const [calendar, setCalendar] = useContext(CalendarContext);
 
   let [fontsLoaded] = useFonts({
@@ -26,12 +30,25 @@ export default function Month({ navigation }) {
   });
 
   const checkEvents = (isoDate) => {
-    friends.current.forEach((friend) => {
-      calendar[friend.id].forEach((e) => {
-        let event = e.start.toString().split("T");
-        if (isoDate === event[0]) console.log("Event: ", event[0]);
+    let styl = { containerStyle: styles.normalDay };
+    let changed = false;
+    if (filterFriends) {
+      filterFriends.forEach((friend) => {
+        calendar[friend.id].forEach((e) => {
+          let event = e.start.toString().split("T");
+          if (isoDate === event[0]) {
+            console.log();
+            if (!changed) {
+              changed = true;
+              styl = {
+                style: styles.monthDayEvent,
+              };
+            }
+          }
+        });
       });
-    });
+    }
+    return styl;
   };
 
   if (!fontsLoaded) {
@@ -58,50 +75,42 @@ export default function Month({ navigation }) {
             </View>
           </TouchableOpacity>
         </View>
-        {/* Calendar */}
-        <CalendarPicker
-          customDatesStyles={(date) => {
-            let newDate = new Date(date.toString()).toISOString().split("T");
-            checkEvents(newDate[0]);
-
-            // friends.forEach((friend) => {
-            //   calendar[friend.id].forEach((e) => {
-            //     if (e.start.toString()) {
-            //     }
-            //   });
-            // });
-          }}
-          textStyle={{
-            color: "#4F2717",
-            fontFamily: "ReemKufi_400Regular",
-            fontSize: 19,
-          }}
-          todayBackgroundColor="#B58E78"
-          todayTextStyle={{
-            color: "#ffffff",
-          }}
-          onDateChange={(date) => {
-            navigation.navigate("Daily", { date: JSON.stringify(date) });
-          }}
-          selectedDayStyle={{
-            backgroundColor: "#F8E6CB",
-          }}
-          selectedDayTextColor="#4F2717"
-          monthTitleStyle={{
-            fontSize: 28,
-          }}
-          yearTitleStyle={{
-            fontSize: 28,
-          }}
-        />
-        <View>
-          <TextInput style={styles.borderLine} value="" editable={false} />
-          <Text style={styles.text}>Today's Events</Text>
-        </View>
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
+          <CalendarPicker
+            customDatesStyles={(date) => {
+              let newDate = new Date(date.toString()).toISOString().split("T");
+              return checkEvents(newDate[0]);
+            }}
+            textStyle={{
+              color: "#4F2717",
+              fontFamily: "ReemKufi_400Regular",
+              fontSize: 19,
+            }}
+            todayBackgroundColor="#B58E78"
+            todayTextStyle={{
+              color: "#ffffff",
+            }}
+            onDateChange={(date) => {
+              navigation.navigate("Daily", { date: JSON.stringify(date) });
+            }}
+            selectedDayStyle={{
+              backgroundColor: "#F8E6CB",
+            }}
+            selectedDayTextColor="#4F2717"
+            monthTitleStyle={{
+              fontSize: 28,
+            }}
+            yearTitleStyle={{
+              fontSize: 28,
+            }}
+          />
+          <View>
+            <Text style={styles.text}>Today's Events</Text>
+          </View>
+
           {/* Fetch Data and Display Friends Events on Current Date */}
           <Text>ADD STUFF HERE</Text>
         </ScrollView>
@@ -147,6 +156,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#e5d3b3",
     textAlign: "center",
+    paddingTop: 10,
     marginLeft: 13,
     marginRight: 13,
     marginBottom: 10,
@@ -209,5 +219,15 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderRadius: 100,
     backgroundColor: "#F8E6CB",
+  },
+  monthDayEvent: {
+    // marginHorizontal: 1,
+    backgroundColor: "transparent",
+    borderColor: "#B58E78",
+    borderWidth: 2,
+    borderStyle: "solid",
+  },
+  normalDay: {
+    // marginHorizontal: 1,
   },
 });
