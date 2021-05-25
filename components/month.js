@@ -18,13 +18,13 @@ import { CalendarContext, FilterFriendsContext } from "./context";
 export default function Month({ navigation }) {
   const [filterFriends] = useContext(FilterFriendsContext);
   const [calendar] = useContext(CalendarContext);
-  const [current] = useState(() => {
+  const [current, setCurrent] = useState(() => {
     let date = new Date();
     let year = date.getFullYear().toString().padStart(2, "0");
     let month = date.getMonth() + 1;
     let realMonth = month.toString().padStart(2, "0");
     let day = date.getDate().toString().padStart(2, "0");
-    let currentDate = `${year}-${realMonth}-${26}`;
+    let currentDate = `${year}-${realMonth}-${day}`;
     return currentDate;
   });
 
@@ -60,14 +60,14 @@ export default function Month({ navigation }) {
       filterFriends.forEach((friend, index) => {
         calendar[friend.user_id].forEach((evt, i) => {
           let event = evt.start.toString().split("T");
-          console.log(`${current} === ${event[0]}`);
+
           if (current === event[0].toString()) {
             bool = true;
           }
         });
       });
     }
-    console.log("EVENT CHECKED");
+
     return bool;
   };
 
@@ -114,10 +114,18 @@ export default function Month({ navigation }) {
               color: "#ffffff",
             }}
             onDateChange={(date) => {
-              navigation.navigate("Daily", { date: JSON.stringify(date) });
+              setCurrent(() => {
+                let d = new Date(date.toString());
+                let year = d.getFullYear().toString().padStart(2, "0");
+                let month = d.getMonth() + 1;
+                let realMonth = month.toString().padStart(2, "0");
+                let day = d.getDate().toString().padStart(2, "0");
+                let currentDate = `${year}-${realMonth}-${day}`;
+                return currentDate;
+              });
             }}
             selectedDayStyle={{
-              backgroundColor: "#F8E6CB",
+              backgroundColor: "#ffffff",
             }}
             selectedDayTextColor="#4F2717"
             monthTitleStyle={{
@@ -133,18 +141,39 @@ export default function Month({ navigation }) {
               filterFriends.map((friend, index) => {
                 return calendar[friend.user_id].map((evt, i) => {
                   let event = evt.start.toString().split("T");
-                  console.log(`${current} === ${event[0]}`);
+
                   if (current === event[0].toString()) {
+                    let date = new Date(evt.start);
+                    let endDate = new Date(evt.end);
+                    let totalHours = endDate.getHours() - date.getHours();
+                    let start =
+                      date.getHours() > 11
+                        ? `${
+                            date.getHours !== 12 ? date.getHours() - 12 : 12
+                          }:00 PM`
+                        : `${date.getHours()}:00 AM`;
+                    let end =
+                      endDate.getHours() > 11
+                        ? `${
+                            endDate.getHours !== 12
+                              ? endDate.getHours() - 12
+                              : 12
+                          }:00 PM`
+                        : `${endDate.getHours()}:00 AM`;
                     return (
                       <View key={i}>
-                        <Text>{friend.name}</Text>
+                        <Text>
+                          {current}
+                          {friend.name} has an {totalHours} hour event from{" "}
+                          {start} - {end}
+                        </Text>
                       </View>
                     );
                   }
                 });
               })
             ) : (
-              <Text>LAZY WAFFLE IMAGE</Text>
+              <Text>{current}LAZY WAFFLE IMAGE</Text>
             )}
           </View>
         </ScrollView>

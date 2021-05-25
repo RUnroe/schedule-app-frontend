@@ -7,3 +7,5 @@ export const CalendarContext = createContext();
 export const FilterFriendsContext = createContext();
 
 export const Check = createContext();
+
+export const PendingContext = createContext();

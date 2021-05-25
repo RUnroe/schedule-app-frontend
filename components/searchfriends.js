@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,11 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
-import { useState } from "react";
+import { FriendsContext, PendingContext } from "./context";
 
 export default function SearchFriends({ navigation }) {
+  const [pending, setPending] = useContext(PendingContext);
+  const [friends, setFriends] = useContext(FriendsContext);
   const [search, setSearch] = useState("");
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -47,8 +49,22 @@ export default function SearchFriends({ navigation }) {
           </View>
 
           <Text style={styles.title}>Current Friends</Text>
-          <Text style={styles.text}>---Todo: Pending Friendss ---</Text>
-          <Text style={styles.text}>---Todo: Display All Friends ---</Text>
+          <Text style={styles.text}>Pending Friends</Text>
+          {pending ? (
+            pending.map((friend, index) => {
+              return <Text key={index}>{friend.name}</Text>;
+            })
+          ) : (
+            <Text>No Pending Friends</Text>
+          )}
+          <Text style={styles.text}>All Friends ---</Text>
+          {friends ? (
+            friends.map((friend, index) => {
+              return <Text key={index}>{friend.name}</Text>;
+            })
+          ) : (
+            <Text>No Friends</Text>
+          )}
         </ScrollView>
       </View>
     );
