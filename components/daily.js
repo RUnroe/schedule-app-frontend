@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -12,25 +12,58 @@ import {
   useFonts,
   Itim_400Regular,
   ReemKufi_400Regular,
+  NewsCycle_700Bold,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
-import { CalendarContext, FriendsContext } from "./context";
+import {
+  CalendarContext,
+  FilterFriendsContext,
+  FriendsContext,
+} from "./context";
 
 export default function Daily({ route, navigation }) {
   const [friends, setFriends] = useContext(FriendsContext);
   const [calendar, setCalendar] = useContext(CalendarContext);
-
+  const [filterFriends] = useContext(FilterFriendsContext);
   const currentDate = jsonConvertToDate(route.params);
   const [month, day, year] = currentDate.toLocaleDateString().split("/");
+
+  const [events, setEvents] = useState([]);
+
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
 
-  if (calendar && friends?.current) {
-    let id = friends.current[0].id;
-    console.log(calendar[id][0].end);
-  }
+  const formatDate = (date) => {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  };
+
+  // if (filterFriends) {
+  //   filterFriends.map((friend, index) => {
+  //     calendar[friend.user_id].map((evt) => {
+  //       let event = evt.start.toString().split("T");
+  //       if (formatDate(currentDate) === event[0].toString()) {
+  //         //DO MAFS AND DISPLAY DAILY DATA
+  //         let date = new Date(evt.start);
+  //         let endDate = new Date(evt.end);
+  //         let totalHours = date.getHours() - endDate.getHours();
+
+  //         console.log(date.getHours());
+  //         console.log(endDate.getHours());
+  //         // setEvents((prev) => [...prev, date, totalHours]);
+  //       }
+  //     });
+  //   });
+  // }
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
@@ -70,24 +103,23 @@ export default function Daily({ route, navigation }) {
 
 //Pass in daily events
 const ViewHours = () => {
-  const twelveHours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const hours = [
+    12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    11,
+  ];
   return (
     <View>
-      {twelveHours.map((hour, index) => {
+      {hours.map((hour, index) => {
         return (
           <View style={styles.hourBlock} key={index}>
-            <Text>{hour} AM</Text>
+            <Text>
+              {hour} {index > 11 ? "PM" : "AM"}
+            </Text>
             <TextInput style={styles.borderLine} editable={false} />
-            {/* Event Input Here */}
-          </View>
-        );
-      })}
-      {twelveHours.map((hour, index) => {
-        return (
-          <View style={styles.hourBlock} key={index}>
-            <Text>{hour} PM</Text>
-            <TextInput style={styles.borderLine} editable={false} />
-            {/* Event Input Here */}
+            <View>
+              {/* Event Input Here */}
+              <Text></Text>
+            </View>
           </View>
         );
       })}

@@ -14,6 +14,7 @@ import SearchFriends from "./components/searchfriends";
 import {
   CalendarContext,
   Check,
+  FilterCalendarContext,
   FilterFriendsContext,
   FriendsContext,
 } from "./components/context";
@@ -27,13 +28,13 @@ export default function App() {
   const [checked, setChecked] = useState([]);
 
   useEffect(() => {
-    fetch("https://waffle.jtreed.org/api/v0/friends")
+    fetch("https://waffle.jtreed.org/api/v0/friends/current")
       .then((res) => res.json())
       .then((data) => {
-        setFriends(data);
+        setFriends(Object.values(data));
         setChecked(() => {
           let list = [];
-          data.current.forEach(() => {
+          Object.keys(data).forEach(() => {
             list.push(false);
           });
           return list;
@@ -44,9 +45,7 @@ export default function App() {
   useEffect(() => {
     fetch("https://waffle.jtreed.org/api/v0/calendars")
       .then((res) => res.json())
-      .then((data) => {
-        setCalendar(data);
-      });
+      .then((data) => setCalendar(data));
   }, []);
 
   return (

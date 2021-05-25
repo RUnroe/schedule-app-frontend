@@ -20,8 +20,6 @@ export default function Home({ navigation }) {
     ReemKufi_400Regular,
   });
 
-  //Convert to date and then display on daily
-
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
   } else {

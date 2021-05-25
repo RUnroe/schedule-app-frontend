@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  TextInput,
   ScrollView,
 } from "react-native";
 import {
@@ -19,7 +18,7 @@ import { Check, FilterFriendsContext, FriendsContext } from "./context";
 import Checkbox from "expo-checkbox";
 
 export default function FriendsCheckbox({ navigation }) {
-  const [friends, setFriends] = useContext(FriendsContext);
+  const [friends] = useContext(FriendsContext);
   const [filterFriends, setFilterFriends] = useContext(FilterFriendsContext);
   const [checked, setChecked] = useContext(Check);
   const [disable, setDisable] = useState(false);
@@ -32,10 +31,9 @@ export default function FriendsCheckbox({ navigation }) {
   const filter = (checked) => {
     let filterArray = [];
     let count = 0;
-    checked.forEach((check, index) => {
+    checked.map((check, index) => {
       if (check === true) {
-        count++;
-        filterArray.push(friends.current[index]);
+        filterArray.push(friends[index]);
       }
     });
     if (count > 3) {
@@ -70,7 +68,7 @@ export default function FriendsCheckbox({ navigation }) {
             onPress={() => {
               setChecked(() => {
                 let list = [];
-                friends.current.forEach(() => {
+                checked.map(() => {
                   list.push(false);
                 });
                 return list;
@@ -82,9 +80,8 @@ export default function FriendsCheckbox({ navigation }) {
             <Text style={styles.buttonText}>Reset</Text>
           </TouchableOpacity>
           <View>
-            {friends?.current ? (
-              friends.current.map((friend, index) => {
-                //console.log(friend);
+            {friends ? (
+              friends.map((friend, index) => {
                 return (
                   <View key={`Friend_${index}`}>
                     <Checkbox

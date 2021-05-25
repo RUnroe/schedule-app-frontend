@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -13,16 +13,20 @@ import {
 } from "@expo-google-fonts/dev";
 import CalendarPicker from "react-native-calendar-picker";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import {
-  CalendarContext,
-  FilterFriendsContext,
-  FriendsContext,
-} from "./context";
+import { CalendarContext, FilterFriendsContext } from "./context";
 
 export default function Month({ navigation }) {
-  const [friends, setFriends] = useContext(FriendsContext);
-  const [filterFriends, setFilterFriends] = useContext(FilterFriendsContext);
-  const [calendar, setCalendar] = useContext(CalendarContext);
+  const [filterFriends] = useContext(FilterFriendsContext);
+  const [calendar] = useContext(CalendarContext);
+  const [current] = useState(() => {
+    let date = new Date();
+    let year = date.getFullYear().toString().padStart(2, "0");
+    let month = date.getMonth() + 1;
+    let realMonth = month.toString().padStart(2, "0");
+    let day = date.getDate().toString().padStart(2, "0");
+    let currentDate = `${year}-${realMonth}-${26}`;
+    return currentDate;
+  });
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -33,11 +37,10 @@ export default function Month({ navigation }) {
     let styl = { containerStyle: styles.normalDay };
     let changed = false;
     if (filterFriends) {
-      filterFriends.forEach((friend) => {
-        calendar[friend.id].forEach((e) => {
-          let event = e.start.toString().split("T");
+      filterFriends.map((friend, index) => {
+        calendar[friend.user_id].map((evt) => {
+          let event = evt.start.toString().split("T");
           if (isoDate === event[0]) {
-            console.log();
             if (!changed) {
               changed = true;
               styl = {
@@ -49,6 +52,23 @@ export default function Month({ navigation }) {
       });
     }
     return styl;
+  };
+
+  const todaysEvents = () => {
+    let bool = false;
+    if (filterFriends) {
+      filterFriends.forEach((friend, index) => {
+        calendar[friend.user_id].forEach((evt, i) => {
+          let event = evt.start.toString().split("T");
+          console.log(`${current} === ${event[0]}`);
+          if (current === event[0].toString()) {
+            bool = true;
+          }
+        });
+      });
+    }
+    console.log("EVENT CHECKED");
+    return bool;
   };
 
   if (!fontsLoaded) {
@@ -108,11 +128,25 @@ export default function Month({ navigation }) {
             }}
           />
           <View>
-            <Text style={styles.text}>Today's Events</Text>
+            <Text style={styles.text}>Events</Text>
+            {todaysEvents() ? (
+              filterFriends.map((friend, index) => {
+                return calendar[friend.user_id].map((evt, i) => {
+                  let event = evt.start.toString().split("T");
+                  console.log(`${current} === ${event[0]}`);
+                  if (current === event[0].toString()) {
+                    return (
+                      <View key={i}>
+                        <Text>{friend.name}</Text>
+                      </View>
+                    );
+                  }
+                });
+              })
+            ) : (
+              <Text>LAZY WAFFLE IMAGE</Text>
+            )}
           </View>
-
-          {/* Fetch Data and Display Friends Events on Current Date */}
-          <Text>ADD STUFF HERE</Text>
         </ScrollView>
         <View style={styles.bottomView}>
           <View style={styles.buttonSection}>
