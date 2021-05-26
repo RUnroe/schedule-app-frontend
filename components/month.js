@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {
 import CalendarPicker from "react-native-calendar-picker";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { CalendarContext, FilterFriendsContext } from "./context";
-import Wuffle from "../assets/sleepyWaffle.png";
+// import Wuffle from "../assets/sleepyWaffle.png";
 
 export default function Month({ navigation }) {
   const [filterFriends] = useContext(FilterFriendsContext);
@@ -28,6 +28,7 @@ export default function Month({ navigation }) {
     let currentDate = `${year}-${realMonth}-${day}`;
     return currentDate;
   });
+  const [color] = useState(["#ffc552", "#ecbfff", "#a4f5a8", "#c2c4ff"]);
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -77,7 +78,7 @@ export default function Month({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 70, backgroundColor: "#B58E78" }}>
           <TouchableOpacity
             onPress={() => navigation.navigate("Account Settings")}
           >
@@ -126,9 +127,9 @@ export default function Month({ navigation }) {
               });
             }}
             selectedDayStyle={{
-              backgroundColor: "#ffffff",
+              backgroundColor: "#4F2717",
             }}
-            selectedDayTextColor="#4F2717"
+            selectedDayTextColor="#ffffff"
             monthTitleStyle={{
               fontSize: 28,
             }}
@@ -137,7 +138,6 @@ export default function Month({ navigation }) {
             }}
           />
           <View>
-            <Text style={styles.text}>Events</Text>
             {todaysEvents() ? (
               filterFriends.map((friend, index) => {
                 return calendar[friend.user_id].map((evt, i) => {
@@ -146,7 +146,7 @@ export default function Month({ navigation }) {
                   if (current === event[0].toString()) {
                     let date = new Date(evt.start);
                     let endDate = new Date(evt.end);
-                    let totalHours = endDate.getHours() - date.getHours();
+
                     let start =
                       date.getHours() > 11
                         ? `${
@@ -162,11 +162,9 @@ export default function Month({ navigation }) {
                           }:00 PM`
                         : `${endDate.getHours()}:00 AM`;
                     return (
-                      <View key={i}>
-                        <Text>
-                          {current}
-                          {friend.name} has an {totalHours} hour event from{" "}
-                          {start} - {end}
+                      <View style={{ backgroundColor: color[index] }} key={i}>
+                        <Text style={styles.text}>
+                          {friend.name}: {start} - {end}
                         </Text>
                       </View>
                     );
@@ -175,10 +173,11 @@ export default function Month({ navigation }) {
               })
             ) : (
               <View>
-                <Image
+                <Text style={styles.title}>No Events</Text>
+                {/* <Image
                   source={Wuffle}
                   style={{ height: 200, width: 210, alignSelf: "center" }}
-                />
+                /> */}
               </View>
             )}
           </View>
@@ -215,7 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8E6CB",
   },
   title: {
-    margin: 50,
+    margin: 10,
     fontSize: 36,
     textAlign: "center",
     fontFamily: "Itim_400Regular",
@@ -262,7 +261,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#ffffff",
   },
-  arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
   bottomView: {
     width: "100%",
     height: 100,
@@ -282,7 +280,7 @@ const styles = StyleSheet.create({
   profileSection: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 15,
     padding: 5,
     paddingLeft: 10,
     paddingRight: 10,
@@ -292,9 +290,9 @@ const styles = StyleSheet.create({
   monthDayEvent: {
     // marginHorizontal: 1,
     backgroundColor: "transparent",
-    borderColor: "#B58E78",
-    borderWidth: 2,
-    borderStyle: "solid",
+    borderBottomColor: "black",
+    borderBottomWidth: 3,
+    borderStyle: "dashed",
   },
   normalDay: {
     // marginHorizontal: 1,

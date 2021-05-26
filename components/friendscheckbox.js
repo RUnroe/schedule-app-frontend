@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  TextInput,
 } from "react-native";
 import {
   useFonts,
@@ -13,7 +14,7 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
-import Wuffle from "../assets/wuffleLogo.png";
+import Wuffle from "../assets/smile.png";
 import { Check, FilterFriendsContext, FriendsContext } from "./context";
 import Checkbox from "expo-checkbox";
 
@@ -40,6 +41,7 @@ export default function FriendsCheckbox({ navigation }) {
       setDisable(true);
     }
     setFilterFriends(filterArray);
+    console.log(filterFriends[0]);
   };
 
   if (!fontsLoaded && friends?.current) {
@@ -47,7 +49,7 @@ export default function FriendsCheckbox({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 70, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
@@ -60,9 +62,11 @@ export default function FriendsCheckbox({ navigation }) {
 
           <Image
             source={Wuffle}
-            style={{ height: 200, width: 210, alignSelf: "center" }}
+            style={{ height: 160, width: 150, alignSelf: "center" }}
           />
-          <Text>Note: You can only select up to four friends</Text>
+          <Text style={styles.text}>
+            Note: You can only select up to four friends
+          </Text>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -83,21 +87,24 @@ export default function FriendsCheckbox({ navigation }) {
             {friends ? (
               friends.map((friend, index) => {
                 return (
-                  <View key={`Friend_${index}`}>
-                    <Checkbox
-                      value={checked[index]}
-                      onValueChange={(e) => {
-                        setChecked((prev) => {
-                          let newList = [...prev];
-                          newList[index] = e;
-                          filter(newList);
-                          return newList;
-                        });
-                      }}
-                      color={checked ? "#666666" : undefined}
-                      disabled={disable}
-                    />
-                    <Text>{friend.name}</Text>
+                  <View style={styles.checkboxDisplay} key={`Friend_${index}`}>
+                    <View style={styles.checkboxSection}>
+                      <Checkbox
+                        value={checked[index]}
+                        onValueChange={(e) => {
+                          setChecked((prev) => {
+                            let newList = [...prev];
+                            newList[index] = e;
+                            filter(newList);
+                            return newList;
+                          });
+                        }}
+                        color={checked ? "#4F2717" : undefined}
+                        disabled={disable}
+                      />
+                      <Text style={styles.checkText}>{friend.name}</Text>
+                    </View>
+                    <TextInput style={styles.borderLine} editable={false} />
                   </View>
                 );
               })
@@ -112,6 +119,7 @@ export default function FriendsCheckbox({ navigation }) {
           >
             <Text style={styles.buttonText}>Save Changes</Text>
           </TouchableOpacity>
+          <View style={styles.padding}></View>
         </ScrollView>
       </View>
     );
@@ -124,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8E6CB",
   },
   title: {
-    margin: 20,
+    margin: 15,
     fontSize: 40,
     textAlign: "center",
     fontFamily: "Itim_400Regular",
@@ -135,8 +143,26 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#4F2717",
     fontSize: 18,
+    marginTop: 15,
+    marginBottom: 15,
   },
-  arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
+  checkText: {
+    fontFamily: "ReemKufi_400Regular",
+    color: "#4F2717",
+    fontSize: 18,
+  },
+  checkboxSection: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkboxDisplay: {
+    width: 175,
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "center",
+  },
+  arrow: { marginTop: 35, marginLeft: 20, height: 29, width: 17 },
   inputSection: { width: 250, alignSelf: "center" },
   textInput: {
     backgroundColor: "#FFFAF2",
@@ -151,7 +177,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#B58E78",
     padding: 1,
-    marginTop: 20,
+    marginTop: 5,
+    marginBottom: 20,
     paddingRight: 10,
     paddingLeft: 10,
     borderColor: "#4F2717",
@@ -163,5 +190,13 @@ const styles = StyleSheet.create({
     fontFamily: "ReemKufi_400Regular",
     fontSize: 18,
     color: "#ffffff",
+  },
+  padding: {
+    padding: 20,
+  },
+  borderLine: {
+    borderTopWidth: 1,
+    borderTopColor: "rgba(71, 56, 47, 0.3)",
+    width: "100%",
   },
 });

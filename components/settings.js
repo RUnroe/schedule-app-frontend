@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,10 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
+import { CalendarDetails } from "./context";
 
 export default function Settings({ navigation }) {
-  // const [ics, setIcs] = useState(() => {{ name: "", url: "", enabled: true }});
+  const [calendarDetails, setCalendarDetails] = useContext(CalendarDetails);
   const [ics, setIcs] = useState("");
 
   let [fontsLoaded] = useFonts({
@@ -29,7 +30,7 @@ export default function Settings({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 70, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
@@ -39,26 +40,85 @@ export default function Settings({ navigation }) {
           showsVerticalScrollIndicator={false}
         >
           <Text style={styles.title}>Settings</Text>
-          <Text style={styles.text}>---Todo: Generate Calendars ---</Text>
-          <Text style={styles.text}>---Todo: Add To Calendars ---</Text>
-          <Text style={styles.text}>Calendar Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setIcs}
-            value={ics}
-          />
-          <Text style={styles.text}>Calendar Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setIcs}
-            value={ics}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Month")}
+
+          {calendarDetails ? (
+            calendarDetails.map((detail, index) => {
+              return (
+                <View style={{ width: "97%", alignSelf: "center" }} key={index}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                    }}
+                  >
+                    <View style={{ marginLeft: 5, width: 110 }}>
+                      <Text style={styles.calendarText} numberOfLines={1}>
+                        {detail.name}
+                      </Text>
+                    </View>
+                    <View style={{ marginLeft: 5, width: 220 }}>
+                      <Text style={styles.calendarText} numberOfLines={1}>
+                        {detail.url}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.calendarText}>
+                        {detail.enabled ? "TRUE" : "FALSE"}
+                      </Text>
+                    </View>
+                  </View>
+                  <TextInput style={styles.borderLine} editable={false} />
+                </View>
+              );
+            })
+          ) : (
+            <View></View>
+          )}
+          <Text style={styles.text}>Add To Calendar</Text>
+          <View style={styles.calendarInput}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Name"
+              onChangeText={setIcs}
+              value={ics}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="ICS Link"
+              onChangeText={setIcs}
+              value={ics}
+            />
+            <TouchableOpacity
+              style={styles.whiteButton}
+              onPress={() => {
+                console.log("create calendar object");
+              }}
+            >
+              <Text style={styles.whiteButtonText}>Create</Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              marginTop: 40,
+              marginBottom: 30,
+            }}
           >
-            <Text style={styles.buttonText}>Save Changes</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.whiteButton}
+              onPress={() => {
+                console.log("create calendar object");
+              }}
+            >
+              <Text style={styles.whiteButtonText}>Create</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Month")}
+            >
+              <Text style={styles.buttonText}>Save Changes</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     );
@@ -88,10 +148,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#4F2717",
     fontSize: 18,
+    margin: 10,
   },
-  arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
+  calendarText: {
+    fontFamily: "ReemKufi_400Regular",
+    color: "#4F2717",
+    fontSize: 14,
+  },
+  calendarInput: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  arrow: { marginTop: 35, marginLeft: 20, height: 29, width: 17 },
   inputSection: { width: 250, alignSelf: "center" },
   textInput: {
+    marginLeft: 5,
+    marginRight: 5,
+    width: 125,
     backgroundColor: "#FFFAF2",
     padding: 1,
     paddingLeft: 12,
@@ -104,17 +178,39 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#B58E78",
     padding: 1,
-    marginTop: 20,
     paddingRight: 10,
     paddingLeft: 10,
     borderColor: "#4F2717",
     borderWidth: 2,
     borderRadius: 20,
     alignSelf: "center",
+    marginLeft: 10,
   },
   buttonText: {
     fontFamily: "ReemKufi_400Regular",
     fontSize: 18,
     color: "#ffffff",
+  },
+  whiteButton: {
+    backgroundColor: "#FFFAF2",
+    padding: 1,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderColor: "#4F2717",
+    borderWidth: 2,
+    borderRadius: 20,
+    marginLeft: 5,
+    marginRight: 5,
+    alignSelf: "center",
+  },
+  whiteButtonText: {
+    fontFamily: "ReemKufi_400Regular",
+    fontSize: 18,
+    color: "#4F2717",
+  },
+  borderLine: {
+    borderTopWidth: 1,
+    borderTopColor: "rgba(71, 56, 47, 0.3)",
+    width: "100%",
   },
 });

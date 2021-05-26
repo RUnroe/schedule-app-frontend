@@ -67,7 +67,7 @@ export default function AccountSettings({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 70, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Month")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
@@ -117,23 +117,39 @@ export default function AccountSettings({ navigation }) {
             ) : (
               errorMsg
             )}
-            <Text>Todo: Addddd Cancel Button</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                if (validateAll()) {
-                  //Create User
-                  // FETCH PUT values
-                  navigation.navigate("Month");
-                }
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                marginTop: 30,
+                marginBottom: 20,
               }}
             >
-              <Text style={styles.buttonText}>Save Changes</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.whiteButton}
+                onPress={() => {
+                  navigation.navigate("Month");
+                }}
+              >
+                <Text style={styles.whiteButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  if (validateAll()) {
+                    //Create User
+                    // FETCH PUT values
+                    navigation.navigate("Month");
+                  }
+                }}
+              >
+                <Text style={styles.buttonText}>Save Changes</Text>
+              </TouchableOpacity>
+            </View>
             {/* Sign out user */}
             <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
-              <View style={styles.whiteButton}>
-                <Text style={styles.whiteButtonText}>Logout</Text>
+              <View style={styles.redButton}>
+                <Text style={styles.redButtonText}>Logout</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -173,11 +189,10 @@ const styles = StyleSheet.create({
     fontFamily: "ReemKufi_400Regular",
     fontSize: 16,
   },
-  arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
+  arrow: { marginTop: 35, marginLeft: 20, height: 29, width: 17 },
   button: {
     backgroundColor: "#B58E78",
     padding: 1,
-    marginTop: 20,
     paddingRight: 10,
     paddingLeft: 10,
     borderColor: "#4F2717",
@@ -199,11 +214,28 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 20,
     alignSelf: "center",
+    marginRight: 20,
   },
   whiteButtonText: {
     fontFamily: "ReemKufi_400Regular",
     fontSize: 18,
     color: "#4F2717",
+  },
+  redButton: {
+    backgroundColor: "#FFFAF2",
+    padding: 1,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderColor: "#FF5F5F",
+    borderWidth: 2,
+    borderRadius: 20,
+    alignSelf: "center",
+  },
+  redButtonText: {
+    fontFamily: "ReemKufi_400Regular",
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#FF5F5F",
   },
   error: {
     fontSize: 12,

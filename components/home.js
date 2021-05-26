@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
   Itim_400Regular,
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
-import Wuffle from "../assets/dancing.png";
+import Wuffle from "../assets/dancingUpdate.png";
 
 export default function Home({ navigation }) {
   let [fontsLoaded] = useFonts({
@@ -25,7 +25,7 @@ export default function Home({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 90, backgroundColor: "#B58E78" }}></View>
+        <View style={{ height: 30, backgroundColor: "#B58E78" }}></View>
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
@@ -33,7 +33,7 @@ export default function Home({ navigation }) {
           <Text style={styles.title}>Welcome To Waffle!</Text>
           <Image
             source={Wuffle}
-            style={{ height: 200, width: 210, alignSelf: "center" }}
+            style={{ height: 205, width: 210, alignSelf: "center" }}
           />
           <Text style={styles.text}>
             A simple scheduling app for you and your friends!
@@ -65,7 +65,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8E6CB",
   },
   title: {
-    margin: 40,
+    marginLeft: 70,
+    marginRight: 70,
+    marginBottom: 20,
+    marginTop: 30,
     fontSize: 36,
     textAlign: "center",
     fontFamily: "Itim_400Regular",
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     marginBottom: 0,
-    marginTop: 40,
+    marginTop: 30,
     fontFamily: "ReemKufi_400Regular",
     color: "#4F2717",
     fontSize: 18,
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginTop: 50,
+    marginTop: 40,
   },
   button: {
     backgroundColor: "#B58E78",

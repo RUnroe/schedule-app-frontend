@@ -21,8 +21,23 @@ export default function LogIn({ navigation }) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-  //fetch()
-  //validate email and pass
+  const loginUser = () => {
+    fetch("https://waffle.jtreed.org/api/v0/auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email, password: pass }),
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    //GET CURRENT USER DATA AND STORE IN CURRENTUSER CONTEXT
+
+    // fetch("https://waffle.jtreed.org/api/v0/auth")
+    //   .then((res) => res.json())
+    //   .then((data) => console.log(data));
+  };
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -34,7 +49,7 @@ export default function LogIn({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 70, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
@@ -46,7 +61,13 @@ export default function LogIn({ navigation }) {
           <Text style={styles.title}>Login</Text>
           <Image
             source={Wuffle}
-            style={{ height: 200, width: 210, alignSelf: "center" }}
+            style={{
+              height: 120,
+              width: 210,
+              alignSelf: "center",
+              marginBottom: 30,
+              marginTop: 10,
+            }}
           />
           <View style={styles.inputSection}>
             <Text style={styles.text}>Email</Text>
@@ -61,11 +82,12 @@ export default function LogIn({ navigation }) {
               onChangeText={setPass}
               value={pass}
             />
-
-            {/* Change to go to month page */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate("Month")}
+              onPress={() => {
+                loginUser();
+                navigation.navigate("Month");
+              }}
             >
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
@@ -95,7 +117,7 @@ const styles = StyleSheet.create({
     color: "#4F2717",
     fontSize: 18,
   },
-  arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
+  arrow: { marginTop: 35, marginLeft: 20, height: 29, width: 17 },
   inputSection: { width: 250, alignSelf: "center" },
   textInput: {
     backgroundColor: "#FFFAF2",

@@ -17,6 +17,7 @@ import {
   FilterFriendsContext,
   FriendsContext,
   PendingContext,
+  CalendarDetails,
 } from "./components/context";
 
 const Stack = createStackNavigator();
@@ -27,7 +28,9 @@ export default function App() {
   const [filterFriends, setFilterFriends] = useState([]);
   const [checked, setChecked] = useState([]);
   const [pending, setPending] = useState([]);
+  const [calendarDetails, setCalendarDetails] = useState([]);
 
+  //MOVE USE EFFECTS TO MONTH ONCE USER IS LOGGED IN
   useEffect(() => {
     fetch("https://waffle.jtreed.org/api/v0/friends/current")
       .then((res) => res.json())
@@ -52,6 +55,14 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    fetch("https://waffle.jtreed.org/api/v0/calendars/details")
+      .then((res) => res.json())
+      .then((data) => {
+        setCalendarDetails(Object.values(data));
+      });
+  }, []);
+
+  useEffect(() => {
     fetch("https://waffle.jtreed.org/api/v0/calendars")
       .then((res) => res.json())
       .then((data) => setCalendar(data));
@@ -61,65 +72,69 @@ export default function App() {
     <FriendsContext.Provider value={[friends, setFriends]}>
       <PendingContext.Provider value={[pending, setPending]}>
         <CalendarContext.Provider value={[calendar, setCalendar]}>
-          <Check.Provider value={[checked, setChecked]}>
-            <FilterFriendsContext.Provider
-              value={[filterFriends, setFilterFriends]}
-            >
-              <NavigationContainer>
-                <Stack.Navigator
-                  screenOptions={{
-                    headerShown: false,
-                  }}
-                >
-                  <Stack.Screen
-                    name="Waffle"
-                    component={Home}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Sign Up"
-                    component={SignUp}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Log In"
-                    component={LogIn}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Month"
-                    component={Month}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Daily"
-                    component={Daily}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Friends Checkbox"
-                    component={FriendsCheckbox}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Settings"
-                    component={Settings}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Account Settings"
-                    component={AccountSettings}
-                    options={{ gestureEnabled: false }}
-                  />
-                  <Stack.Screen
-                    name="Search Friends"
-                    component={SearchFriends}
-                    options={{ gestureEnabled: false }}
-                  />
-                </Stack.Navigator>
-              </NavigationContainer>
-            </FilterFriendsContext.Provider>
-          </Check.Provider>
+          <CalendarDetails.Provider
+            value={[calendarDetails, setCalendarDetails]}
+          >
+            <Check.Provider value={[checked, setChecked]}>
+              <FilterFriendsContext.Provider
+                value={[filterFriends, setFilterFriends]}
+              >
+                <NavigationContainer>
+                  <Stack.Navigator
+                    screenOptions={{
+                      headerShown: false,
+                    }}
+                  >
+                    <Stack.Screen
+                      name="Waffle"
+                      component={Home}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Sign Up"
+                      component={SignUp}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Log In"
+                      component={LogIn}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Month"
+                      component={Month}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Daily"
+                      component={Daily}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Friends Checkbox"
+                      component={FriendsCheckbox}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Settings"
+                      component={Settings}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Account Settings"
+                      component={AccountSettings}
+                      options={{ gestureEnabled: false }}
+                    />
+                    <Stack.Screen
+                      name="Search Friends"
+                      component={SearchFriends}
+                      options={{ gestureEnabled: false }}
+                    />
+                  </Stack.Navigator>
+                </NavigationContainer>
+              </FilterFriendsContext.Provider>
+            </Check.Provider>
+          </CalendarDetails.Provider>
         </CalendarContext.Provider>
       </PendingContext.Provider>
     </FriendsContext.Provider>

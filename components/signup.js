@@ -13,7 +13,7 @@ import {
   Itim_400Regular,
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
-import backButton from "../assets/smile.png";
+import backButton from "../assets/arrow.png";
 import { useState } from "react";
 
 export default function SignUp({ navigation }) {
@@ -34,9 +34,28 @@ export default function SignUp({ navigation }) {
     ReemKufi_400Regular,
   });
 
+  const createUser = () => {
+    fetch("https://waffle.jtreed.org/api/v0/auth/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: pass,
+        first_name: first,
+        last_name: last,
+      }),
+    })
+      .then(() => console.log("Successful"))
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const emailRegex = /\S+@\S+\.\S+/;
   const nameRegex = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i;
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const passwordRegex = /^.{8,}$/;
 
   const validation = (value, num) => {
     if (num === 0) {
@@ -78,7 +97,7 @@ export default function SignUp({ navigation }) {
   } else {
     return (
       <View style={styles.container}>
-        <View style={{ height: 90, backgroundColor: "#B58E78" }}>
+        <View style={{ height: 70, backgroundColor: "#B58E78" }}>
           <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
             <Image source={backButton} style={styles.arrow} />
           </TouchableOpacity>
@@ -153,8 +172,7 @@ export default function SignUp({ navigation }) {
               style={styles.button}
               onPress={() => {
                 if (validateAll()) {
-                  //Create User
-                  // FETCH POST values
+                  createUser();
                   navigation.navigate("Waffle");
                 }
               }}
@@ -198,7 +216,7 @@ const styles = StyleSheet.create({
     fontFamily: "ReemKufi_400Regular",
     fontSize: 16,
   },
-  arrow: { marginTop: 45, marginLeft: 20, height: 29, width: 17 },
+  arrow: { marginTop: 35, marginLeft: 20, height: 29, width: 17 },
   button: {
     backgroundColor: "#B58E78",
     padding: 1,
