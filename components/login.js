@@ -15,7 +15,7 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 import { useState } from "react";
-import Wuffle from "../assets/wuffleLogo.png";
+import Wuffle from "../assets/fatPancake.png";
 
 export default function LogIn({ navigation }) {
   const [email, setEmail] = useState("");

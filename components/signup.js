@@ -13,7 +13,7 @@ import {
   Itim_400Regular,
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
-import backButton from "../assets/arrow.png";
+import backButton from "../assets/smile.png";
 import { useState } from "react";
 
 export default function SignUp({ navigation }) {

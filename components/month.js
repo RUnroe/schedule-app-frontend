@@ -14,6 +14,7 @@ import {
 import CalendarPicker from "react-native-calendar-picker";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { CalendarContext, FilterFriendsContext } from "./context";
+import Wuffle from "../assets/sleepyWaffle.png";
 
 export default function Month({ navigation }) {
   const [filterFriends] = useContext(FilterFriendsContext);
@@ -173,7 +174,12 @@ export default function Month({ navigation }) {
                 });
               })
             ) : (
-              <Text>{current}LAZY WAFFLE IMAGE</Text>
+              <View>
+                <Image
+                  source={Wuffle}
+                  style={{ height: 200, width: 210, alignSelf: "center" }}
+                />
+              </View>
             )}
           </View>
         </ScrollView>

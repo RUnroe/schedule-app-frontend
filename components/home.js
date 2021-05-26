@@ -12,7 +12,7 @@ import {
   Itim_400Regular,
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
-import Wuffle from "../assets/wuffleLogo.png";
+import Wuffle from "../assets/dancing.png";
 
 export default function Home({ navigation }) {
   let [fontsLoaded] = useFonts({

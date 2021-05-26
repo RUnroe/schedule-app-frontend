@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,12 +14,10 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
-import { useState } from "react";
 
 export default function Settings({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
-  //validate email and pass
+  // const [ics, setIcs] = useState(() => {{ name: "", url: "", enabled: true }});
+  const [ics, setIcs] = useState("");
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -43,7 +41,18 @@ export default function Settings({ navigation }) {
           <Text style={styles.title}>Settings</Text>
           <Text style={styles.text}>---Todo: Generate Calendars ---</Text>
           <Text style={styles.text}>---Todo: Add To Calendars ---</Text>
-
+          <Text style={styles.text}>Calendar Name</Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={setIcs}
+            value={ics}
+          />
+          <Text style={styles.text}>Calendar Name</Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={setIcs}
+            value={ics}
+          />
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("Month")}
@@ -55,6 +64,12 @@ export default function Settings({ navigation }) {
     );
   }
 }
+
+// 181783920193021334: {name: "get outlook for toster", url: "https://eeee.outlook.com/ur-mom.ics", enabled: true}
+// 181783920193021336: {name: "gogle", url: "https://gmail.google.com/zoinks.ics", enabled: false}
+// 181783920193021337: {name: "YAHOOOOOOOO", url: "https://yahoo.mx/adsadfal.ics", enabled: true}
+// 181783920193021338: {name: "wait are you guys outside", url: "https://cody.ashby/no/sorry.ics", enabled: true}
+// replace1: {name: "free", url: "stuff.ics", enabled: true}
 
 const styles = StyleSheet.create({
   container: {
