@@ -35,8 +35,9 @@ export default function SignUp({ navigation }) {
   });
 
   const createUser = () => {
-    fetch("https://waffle.jtreed.org/api/v0/auth/create", {
+    fetch("https://waffle.jtreed.org/api/v1/auth/create", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

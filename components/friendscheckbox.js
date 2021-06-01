@@ -15,7 +15,12 @@ import {
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
 import Wuffle from "../assets/smile.png";
-import { Check, FilterFriendsContext, FriendsContext } from "./context";
+import {
+  Check,
+  CurrentUser,
+  FilterFriendsContext,
+  FriendsContext,
+} from "./context";
 import Checkbox from "expo-checkbox";
 
 export default function FriendsCheckbox({ navigation }) {
@@ -23,6 +28,7 @@ export default function FriendsCheckbox({ navigation }) {
   const [filterFriends, setFilterFriends] = useContext(FilterFriendsContext);
   const [checked, setChecked] = useContext(Check);
   const [disable, setDisable] = useState(false);
+  const [user] = useContext(CurrentUser);
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -41,7 +47,7 @@ export default function FriendsCheckbox({ navigation }) {
       setDisable(true);
     }
     setFilterFriends(filterArray);
-    console.log(filterFriends[0]);
+    console.log(filterFriends);
   };
 
   if (!fontsLoaded && friends?.current) {
@@ -102,7 +108,9 @@ export default function FriendsCheckbox({ navigation }) {
                         color={checked ? "#4F2717" : undefined}
                         disabled={disable}
                       />
-                      <Text style={styles.checkText}>{friend.name}</Text>
+                      <Text numberOfLines={1} style={styles.checkText}>
+                        &nbsp;{friend.name}
+                      </Text>
                     </View>
                     <TextInput style={styles.borderLine} editable={false} />
                   </View>

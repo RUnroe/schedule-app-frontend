@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -14,18 +14,54 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
-import { useState } from "react";
+import { CurrentUser } from "./context";
 
 export default function AccountSettings({ navigation }) {
-  //Set value of login info
-  const [email, setEmail] = useState("");
-  const [first, setFirst] = useState("");
-  const [last, setLast] = useState("");
-  //
+  const [user, setUser] = useContext(CurrentUser);
+  const [email, setEmail] = useState(user.email);
+  const [first, setFirst] = useState(user.first_name);
+  const [last, setLast] = useState(user.last_name);
   const [errorMsg, setErrorMsg] = useState(false);
   const [validEmail, setValidEmail] = useState(true);
   const [validFirst, setValidFirst] = useState(true);
   const [validLast, setValidLast] = useState(true);
+
+  const updateUser = () => {
+    fetch("https://waffle.jtreed.org/api/v1/auth/", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        email: email,
+        first_name: first,
+        last_name: last,
+      }),
+    })
+      .then(() => {
+        setUser((prev) => ({
+          ...prev,
+          email: email,
+          first_name: first,
+          last_name: last,
+        }));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const deleteUser = () => {
+    fetch("https://waffle.jtreed.org/api/v1/auth/", {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then(() => console.log("Successfully Deleted"))
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -137,8 +173,7 @@ export default function AccountSettings({ navigation }) {
                 style={styles.button}
                 onPress={() => {
                   if (validateAll()) {
-                    //Create User
-                    // FETCH PUT values
+                    updateUser();
                     navigation.navigate("Month");
                   }
                 }}
@@ -146,8 +181,13 @@ export default function AccountSettings({ navigation }) {
                 <Text style={styles.buttonText}>Save Changes</Text>
               </TouchableOpacity>
             </View>
-            {/* Sign out user */}
-            <TouchableOpacity onPress={() => navigation.navigate("Waffle")}>
+
+            <TouchableOpacity
+              onPress={() => {
+                deleteUser();
+                navigation.navigate("Waffle");
+              }}
+            >
               <View style={styles.redButton}>
                 <Text style={styles.redButtonText}>Logout</Text>
               </View>

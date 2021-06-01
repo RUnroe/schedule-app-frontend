@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -16,27 +16,41 @@ import {
 import backButton from "../assets/arrow.png";
 import { useState } from "react";
 import Wuffle from "../assets/fatPancake.png";
+import { CurrentUser } from "./context";
 
 export default function LogIn({ navigation }) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [user, setUser] = useContext(CurrentUser);
+
+  // AUTH
 
   const loginUser = () => {
-    fetch("https://waffle.jtreed.org/api/v0/auth", {
+    fetch("https://waffle.jtreed.org/api/v1/auth", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: email, password: pass }),
+      body: JSON.stringify({
+        email: email,
+        password: pass,
+      }),
     }).catch((error) => {
       console.error(error);
     });
+  };
 
-    //GET CURRENT USER DATA AND STORE IN CURRENTUSER CONTEXT
-
-    // fetch("https://waffle.jtreed.org/api/v0/auth")
-    //   .then((res) => res.json())
-    //   .then((data) => console.log(data));
+  const getUserInfo = () => {
+    fetch("https://waffle.jtreed.org/api/v1/auth", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setUser(data))
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   let [fontsLoaded] = useFonts({
@@ -86,6 +100,7 @@ export default function LogIn({ navigation }) {
               style={styles.button}
               onPress={() => {
                 loginUser();
+                getUserInfo();
                 navigation.navigate("Month");
               }}
             >

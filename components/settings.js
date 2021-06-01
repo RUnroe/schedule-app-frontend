@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,16 +14,79 @@ import {
   ReemKufi_400Regular,
 } from "@expo-google-fonts/dev";
 import backButton from "../assets/arrow.png";
-import { CalendarDetails } from "./context";
+import { CalendarDetails, CurrentUser, PendingContext } from "./context";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Settings({ navigation }) {
   const [calendarDetails, setCalendarDetails] = useContext(CalendarDetails);
-  const [ics, setIcs] = useState("");
+  const [url, setUrl] = useState("");
+  const [cName, setCName] = useState("");
+  const [error, setError] = useState(false);
+
+  const [calendars, setCalendars] = useState({});
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
     ReemKufi_400Regular,
   });
+
+  useEffect(() => {
+    console.log(calendarDetails);
+    fetch("https://waffle.jtreed.org/api/v1/calendars/details", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setCalendars(data));
+  }, []);
+
+  const addCalendar = () => {
+    let keyword = `replace${Math.floor(Math.random() * 100000) + 1}`;
+    let values = {
+      name: cName,
+      url: url,
+      enabled: true,
+    };
+    console.log({ [keyword]: values });
+
+    fetch("https://waffle.jtreed.org/api/v1/calendars/details", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ ...calendars, [keyword]: values }),
+    })
+      .then(() => {
+        setCalendars((prev) => ({ ...prev, [keyword]: values }));
+        setCalendarDetails((prev) => [...prev, values]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const deleteCalendar = (name) => {
+    Object.keys(calendars).forEach((key) => {
+      if (calendars[key].url === name) {
+        delete calendars[key];
+      }
+    });
+    fetch("https://waffle.jtreed.org/api/v1/calendars/details", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(calendars),
+    })
+      .then(() => {
+        setCalendarDetails(calendarDetails.filter((item) => item.url !== name));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
@@ -41,7 +104,7 @@ export default function Settings({ navigation }) {
         >
           <Text style={styles.title}>Settings</Text>
 
-          {calendarDetails ? (
+          {calendarDetails.length > 0 ? (
             calendarDetails.map((detail, index) => {
               return (
                 <View style={{ width: "97%", alignSelf: "center" }} key={index}>
@@ -55,15 +118,24 @@ export default function Settings({ navigation }) {
                         {detail.name}
                       </Text>
                     </View>
-                    <View style={{ marginLeft: 5, width: 220 }}>
+                    <View style={{ marginLeft: 10, width: 220 }}>
                       <Text style={styles.calendarText} numberOfLines={1}>
                         {detail.url}
                       </Text>
                     </View>
                     <View>
-                      <Text style={styles.calendarText}>
-                        {detail.enabled ? "TRUE" : "FALSE"}
-                      </Text>
+                      <View style={{ marginLeft: 5, flexDirection: "row" }}>
+                        <TouchableOpacity
+                          onPress={() => deleteCalendar(detail.url)}
+                        >
+                          <Ionicons
+                            style={{ marginLeft: 5 }}
+                            name="trash-outline"
+                            size={18}
+                            color="#4F2717"
+                          />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                   <TextInput style={styles.borderLine} editable={false} />
@@ -78,39 +150,54 @@ export default function Settings({ navigation }) {
             <TextInput
               style={styles.textInput}
               placeholder="Name"
-              onChangeText={setIcs}
-              value={ics}
+              onChangeText={setCName}
+              value={cName}
             />
             <TextInput
               style={styles.textInput}
               placeholder="ICS Link"
-              onChangeText={setIcs}
-              value={ics}
+              onChangeText={setUrl}
+              value={url}
             />
             <TouchableOpacity
               style={styles.whiteButton}
               onPress={() => {
-                console.log("create calendar object");
+                let urlCheck = url.substring(url.length - 4);
+                if (urlCheck === ".ics") {
+                  addCalendar();
+                  setCName("");
+                  setUrl("");
+                  setError(false);
+                } else {
+                  setError(true);
+                }
               }}
             >
               <Text style={styles.whiteButtonText}>Create</Text>
             </TouchableOpacity>
           </View>
+          {error ? (
+            <Text style={styles.error}>
+              Cannot Create. Make sure to add ".ics"
+            </Text>
+          ) : (
+            <View></View>
+          )}
           <View
             style={{
               flexDirection: "row",
               justifyContent: "center",
-              marginTop: 40,
+              marginTop: 30,
               marginBottom: 30,
             }}
           >
             <TouchableOpacity
               style={styles.whiteButton}
               onPress={() => {
-                console.log("create calendar object");
+                navigation.navigate("Month");
               }}
             >
-              <Text style={styles.whiteButtonText}>Create</Text>
+              <Text style={styles.whiteButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
@@ -124,12 +211,6 @@ export default function Settings({ navigation }) {
     );
   }
 }
-
-// 181783920193021334: {name: "get outlook for toster", url: "https://eeee.outlook.com/ur-mom.ics", enabled: true}
-// 181783920193021336: {name: "gogle", url: "https://gmail.google.com/zoinks.ics", enabled: false}
-// 181783920193021337: {name: "YAHOOOOOOOO", url: "https://yahoo.mx/adsadfal.ics", enabled: true}
-// 181783920193021338: {name: "wait are you guys outside", url: "https://cody.ashby/no/sorry.ics", enabled: true}
-// replace1: {name: "free", url: "stuff.ics", enabled: true}
 
 const styles = StyleSheet.create({
   container: {
@@ -159,6 +240,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
+  },
+  error: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#FF5F5F",
+    textAlign: "center",
+    marginTop: 10,
   },
   arrow: { marginTop: 35, marginLeft: 20, height: 29, width: 17 },
   inputSection: { width: 250, alignSelf: "center" },

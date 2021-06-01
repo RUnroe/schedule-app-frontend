@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,12 +13,26 @@ import {
 } from "@expo-google-fonts/dev";
 import CalendarPicker from "react-native-calendar-picker";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { CalendarContext, FilterFriendsContext } from "./context";
-// import Wuffle from "../assets/sleepyWaffle.png";
+import {
+  CalendarContext,
+  CalendarDetails,
+  Check,
+  FilterFriendsContext,
+  FriendsContext,
+  PendingContext,
+  CurrentUser,
+} from "./context";
+import { onChange } from "react-native-reanimated";
 
 export default function Month({ navigation }) {
   const [filterFriends] = useContext(FilterFriendsContext);
-  const [calendar] = useContext(CalendarContext);
+  const [calendar, setCalendar] = useContext(CalendarContext);
+  const [pending, setPending] = useContext(PendingContext);
+  const [friends, setFriends] = useContext(FriendsContext);
+  const [calendarDetails, setCalendarDetails] = useContext(CalendarDetails);
+  const [checked, setChecked] = useContext(Check);
+  const [user, setUser] = useContext(CurrentUser);
+  const [color] = useState(["#ffc552", "#ecbfff", "#a4f5a8", "#c2c4ff"]);
   const [current, setCurrent] = useState(() => {
     let date = new Date();
     let year = date.getFullYear().toString().padStart(2, "0");
@@ -28,7 +42,55 @@ export default function Month({ navigation }) {
     let currentDate = `${year}-${realMonth}-${day}`;
     return currentDate;
   });
-  const [color] = useState(["#ffc552", "#ecbfff", "#a4f5a8", "#c2c4ff"]);
+
+  useEffect(() => {
+    fetch("https://waffle.jtreed.org/api/v1/friends/current", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setFriends(Object.values(data));
+        setChecked(() => {
+          let list = [];
+          Object.keys(data).forEach(() => {
+            list.push(false);
+          });
+          return list;
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("https://waffle.jtreed.org/api/v1/friends/pending", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPending(Object.values(data));
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("https://waffle.jtreed.org/api/v1/calendars/details", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCalendarDetails(Object.values(data));
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("https://waffle.jtreed.org/api/v1/calendars/details", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setCalendar(data));
+  }, []);
 
   let [fontsLoaded] = useFonts({
     Itim_400Regular,
@@ -38,7 +100,7 @@ export default function Month({ navigation }) {
   const checkEvents = (isoDate) => {
     let styl = { containerStyle: styles.normalDay };
     let changed = false;
-    if (filterFriends) {
+    if (filterFriends && calendar > 0) {
       filterFriends.map((friend, index) => {
         calendar[friend.user_id].map((evt) => {
           let event = evt.start.toString().split("T");
@@ -53,14 +115,27 @@ export default function Month({ navigation }) {
         });
       });
     }
+    if (calendar[user.user_id] > 0) {
+      calendar[user.user_id].map((evt) => {
+        let event = evt.start.toString().split("T");
+        if (isoDate === event[0]) {
+          if (!changed) {
+            changed = true;
+            styl = {
+              style: styles.monthDayEvent,
+            };
+          }
+        }
+      });
+    }
     return styl;
   };
 
   const todaysEvents = () => {
     let bool = false;
-    if (filterFriends) {
-      filterFriends.forEach((friend, index) => {
-        calendar[friend.user_id].forEach((evt, i) => {
+    if (filterFriends && calendar > 0) {
+      filterFriends.map((friend, index) => {
+        calendar[friend.user_id].map((evt, i) => {
           let event = evt.start.toString().split("T");
 
           if (current === event[0].toString()) {
@@ -91,7 +166,7 @@ export default function Month({ navigation }) {
                     color: "#4F2717",
                   }}
                 >
-                  Username
+                  {user.first_name} {user.last_name}
                 </Text>
               </View>
             </View>
@@ -138,6 +213,37 @@ export default function Month({ navigation }) {
             }}
           />
           <View>
+            {calendar[user.user_id] > 0 ? (
+              calendar[user.user_id].map((evt, i) => {
+                let event = evt.start.toString().split("T");
+                if (current === event[0].toString()) {
+                  let date = new Date(evt.start);
+                  let endDate = new Date(evt.end);
+
+                  let start =
+                    date.getHours() > 11
+                      ? `${
+                          date.getHours !== 12 ? date.getHours() - 12 : 12
+                        }:00 PM`
+                      : `${date.getHours()}:00 AM`;
+                  let end =
+                    endDate.getHours() > 11
+                      ? `${
+                          endDate.getHours !== 12 ? endDate.getHours() - 12 : 12
+                        }:00 PM`
+                      : `${endDate.getHours()}:00 AM`;
+                  return (
+                    <View style={{ backgroundColor: "#B3E0FE" }} key={i}>
+                      <Text style={styles.text}>
+                        Me: {start} - {end}
+                      </Text>
+                    </View>
+                  );
+                }
+              })
+            ) : (
+              <Text></Text>
+            )}
             {todaysEvents() ? (
               filterFriends.map((friend, index) => {
                 return calendar[friend.user_id].map((evt, i) => {
@@ -164,7 +270,9 @@ export default function Month({ navigation }) {
                     return (
                       <View style={{ backgroundColor: color[index] }} key={i}>
                         <Text style={styles.text}>
-                          {friend.name}: {start} - {end}
+                          {friend.name
+                            ? `${friend.name}: ${start} - ${end}`
+                            : `Me: ${start} - ${end}`}
                         </Text>
                       </View>
                     );
@@ -173,11 +281,7 @@ export default function Month({ navigation }) {
               })
             ) : (
               <View>
-                <Text style={styles.title}>No Events</Text>
-                {/* <Image
-                  source={Wuffle}
-                  style={{ height: 200, width: 210, alignSelf: "center" }}
-                /> */}
+                <Text style={styles.title}></Text>
               </View>
             )}
           </View>
