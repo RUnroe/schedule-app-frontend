@@ -22,7 +22,6 @@ import {
   PendingContext,
   CurrentUser,
 } from "./context";
-import { onChange } from "react-native-reanimated";
 
 export default function Month({ navigation }) {
   const [filterFriends] = useContext(FilterFriendsContext);

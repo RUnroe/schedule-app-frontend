@@ -144,6 +144,7 @@ export default function SignUp({ navigation }) {
             )}
             <Text style={styles.text}>Password</Text>
             <TextInput
+              secureTextEntry={true}
               style={styles.textInput}
               onChangeText={(e) => validation(e, 3)}
               value={pass}
@@ -155,6 +156,7 @@ export default function SignUp({ navigation }) {
             )}
             <Text style={styles.text}>Confirm Password</Text>
             <TextInput
+              secureTextEntry={true}
               style={styles.textInput}
               onChangeText={(e) => validation(e, 4)}
               value={confirm}

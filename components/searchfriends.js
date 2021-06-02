@@ -28,6 +28,7 @@ export default function SearchFriends({ navigation }) {
   });
 
   console.log(friendSearch);
+  console.log(pending);
 
   const deleteFriend = (friendID) => {
     fetch(`https://waffle.jtreed.org/api/v1/friends/${friendID}`, {
@@ -67,6 +68,7 @@ export default function SearchFriends({ navigation }) {
   };
 
   const acceptFriend = (friendID) => {
+    console.log(friendID);
     fetch(`https://waffle.jtreed.org/api/v1/friends/${friendID}`, {
       method: "PUT",
       credentials: "include",
@@ -74,7 +76,7 @@ export default function SearchFriends({ navigation }) {
         "Content-Type": "application/json",
       },
     })
-      .then(() => console.log("Successfully Deleted"))
+      .then(() => console.log("Successfully Accepted"))
       .catch((error) => {
         console.error(error);
       });
